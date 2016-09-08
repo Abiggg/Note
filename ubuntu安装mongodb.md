@@ -1,4 +1,4 @@
-Ubuntu安装mongodb
+## Ubuntu安装mongodb
 
 1.导入软件源的公钥
 ----
