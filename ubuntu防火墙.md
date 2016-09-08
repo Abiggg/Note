@@ -1,7 +1,6 @@
 ## Ubuntu下的防火墙 ufw&iptables
 
-ufw
-----
+### ufw
 
 #### 简介
 
@@ -59,8 +58,7 @@ $ sudo ufw disable
 ```
 
 
-iptables
-----
+### iptables
 
 #### 简介
 
@@ -154,8 +152,7 @@ post-down iptables-save > /etc/iptables.up.rules
 $ sudo iptables -F
 ```
 
-参考链接
-----
+### 参考链接
 
 [http://wiki.ubuntu.org.cn/IptablesHowTo](http://wiki.ubuntu.org.cn/IptablesHowTo)
 
