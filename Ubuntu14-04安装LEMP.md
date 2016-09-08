@@ -120,7 +120,7 @@ server {
 ```
   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 ```
-(4).然后打开/etc/php5/fpm/pool.d/www.conf文件，其中有下面这行：
+(4).然后打开`/etc/php5/fpm/pool.d/www.conf`文件，其中有下面这行：
 ```
 listen = /var/run/php5-fpm.sock
 ```
@@ -142,7 +142,7 @@ sudo vim /usr/share/nginx/html/info.php
 phpinfo();
 ?>
 ```
-在浏览器访问http://example.localhost/info.php，就可以看到php的输出信息；
+在浏览器访问[http://example.localhost/info.php](http://example.localhost/info.php)，就可以看到php的输出信息；
 
 参考链接
 ----
