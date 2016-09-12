@@ -241,11 +241,38 @@ B
 
 const关键字
 ----
+### const修饰指针
 [Clockwise/Spiral Rule](http://c-faq.com/decl/spiral.anderson.html)
 
 [stackoverflow上的详解](http://stackoverflow.com/questions/1143262/what-is-the-difference-between-const-int-const-int-const-and-int-const)
 
 ![](https://raw.githubusercontent.com/zhushh/Note/master/const2.png)
+
+### const修饰类的成员变量及成员函数
+* 1.类的成员变量被const修饰时，需要在构造函数初始化列表初始化
+```
+class A {
+public:
+    A(int a) : age(a) {}
+private:
+    const int age;
+}
+```
+* 2.类的成员函数被const修饰的时候，不能对类的成员变量进行修改且在函数体中不能调用非const函数
+```
+class A {
+public:
+    A() {}
+    void printAge() { cout << age << endl; }
+    int getAge() const {
+        age++;    // Error
+        printAge();   // Error
+        return age;
+    }
+private:
+    int age;
+}
+```
 
 函数
 ----
