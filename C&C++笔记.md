@@ -245,6 +245,7 @@ const关键字
 
 [stackoverflow上的详解](http://stackoverflow.com/questions/1143262/what-is-the-difference-between-const-int-const-int-const-and-int-const)
 
+![](https://raw.githubusercontent.com/zhushh/Note/master/const2.png)
 
 函数
 ----
