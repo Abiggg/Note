@@ -38,6 +38,11 @@ Derived Constructed
 Derived Destructed
 Test Destructed
 Base Destructed
+
+原因：
+delete指向派生类的基类指针构造函数和析构函数的执行顺序如下：
+基类构造函数->成员变量的构造函数->自身构造函数
+自身析构函数->成员变量析构函数->基类析构函数
 ```
 
 ### 虚函数表的修改
@@ -87,6 +92,15 @@ int main(void)
 
 输出结果：
 Wang, my age = 1
+
+原因：
+理解虚函数表以及类的存储结构
+int * p = (int *)(&kitty)   // p指向kitty
+int * q = (int *)(&jd)      // q指向jd
+p[0] = q[0]   // 把kitty的指向cat::print_age的指针值，修改成指向了dog::print_age
+pa = &kitty   // pa指向kitty
+pa->print_age()  // 调用的是刚刚被修改过的函数指针，也就是dog::print_age函数，但是
+// 在this->age的这个语句的this是kitty,age也就自然是kitty的1
 ```
 
 ### 类的大小测试
@@ -224,6 +238,13 @@ B
      pp       ppp                  pp       ppp    
 
 ```
+
+const关键字
+----
+[Clockwise/Spiral Rule](http://c-faq.com/decl/spiral.anderson.html)
+
+[stackoverflow上的详解](http://stackoverflow.com/questions/1143262/what-is-the-difference-between-const-int-const-int-const-and-int-const)
+
 
 函数
 ----
