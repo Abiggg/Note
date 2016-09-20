@@ -276,7 +276,7 @@ private:
 
 函数
 ----
-### 函数执行顺序
+### 函数参数入栈顺序
 ```c++
 #include <stdio.h>
 int ff(int a, int b, int c) {
@@ -293,3 +293,63 @@ CBA
 原因：
 函数参数入栈顺序是从右向左，所以先执行打印C，在打印B，最后打印A
 ```
+
+typename
+----
+[参考链接](https://zh.wikipedia.org/wiki/Typename)
+### class关键字的同义词
+在c++编程语言的泛型编程中，typename关键字用于引入一个模板参数，例如：
+```c++
+template <typename T>
+const T& max(const T& x, const T& y) {
+    if (y < x) {
+        return x;
+    }
+    return y;
+}
+```
+这种情况下，typename可用class这个关键字代替，如下代码所示：
+```c++
+template <class T>
+const T& max(const T& x, const T& y) {
+    if (y < x) {
+        return x;
+    }
+    return y;
+}
+```
+以上两段代码没有功能上的区别。
+
+### 类型名指示符
+先看下面错误的代码：
+```c++
+template <typename T>
+void foo(const T& t) {
+    // 声明一个指针指向某个类型为T::bar的对象的指针
+    T::bar *p;
+}
+
+struct StructWithBarAsType {
+    typedef int bar;
+};
+
+int main() {
+    StructWithBarAsType x;
+    foo(x);
+}
+```
+这段代码是不能通过编译的，因为编译器不知道T::bar究竟是一个类型的名字还是一个某个变量的名字；
+c++标准规定：
+>A name used in a template declaration or definition and that is dependent on a template-parameter is assumed not to name a type unless the applicable name lookup finds a type name or the name is qualified by the keyword typename.
+
+意即出现上述歧义时，编译器将自动默认bar是一个变量名，而不是类名；所以上面中的T::bar * p会被
+解释成为乘法，而不是p为指向T::bar类型的对象的指针。
+要解决上面的问题，就是显示地告诉编译器，T::bar是一个类型名，就必须用关键字typename,例如：
+```c++
+template <typename T>
+void foo(const T& t) {
+    // 声明一个指向某个类型为T::bar的对象的指针
+    typename T::bar *p;
+}
+```
+这样编译器就确定T::bar是一个类型名，p自然就被解释为指向T::bar类型的对象的指针了。
