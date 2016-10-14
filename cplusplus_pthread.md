@@ -326,3 +326,108 @@ void* Send_msg(void* rank) {
 }
 ```
 
+路障和条件变量
+----
+```
+通过保证所有线程程序中处于同一位置来同步线程，这个同步点称为路障（barrier）,只有所有线程都到达此
+路障，线程才能继续运行下去，否则，会阻塞在路障。路障一个非常重要的应用就是调试程序，因为并行程序发
+生错误时，很难确定具体在哪个位置出现错误。
+```
+
+* 忙等待和互斥量实现的路障
+```cpp
+int counter;
+int thread_count;
+pthread_mutex_t barrier_mutex;
+...
+void* Thread_work(...) {
+    ...
+    pthread_mutex_lock(&barrier_mutex);
+    counter++;
+    pthread_mutex_unlock(&barrier_mutex);
+    while (counter < thread_count);
+    ...
+}
+```
+此实现方式的缺点：
+```
+1.线程处于忙等待循环浪费很多cpu周期
+2.程序中的线程数多过于核数时，程序的性能会直线下降
+3.按此方式实现路障，有多少个路障就需要设置多少个不同的共享counter变量来进行计数
+```
+
+* 信号量实现路障
+```cpp
+int counter;
+int thread_count;
+sem_t counter_semaphore;
+sem_t barrier_semaphore;
+...
+void* Thread_work(...) {
+    ...
+    sem_wait(&counter_semphore);    // 线程请求counter_semaphore
+    if (counter == thread_count - 1) {  // 判断是否为最后一个线程
+        counter = 0;    // 重置counter计数
+        sem_post(&counter_semaphore);   // 释放counter_semaphore
+        for (int i = 0; i < thread_count - 1; i++) {
+            sem_post(&barrier_semaphore);   // 逐一释放barrier_semaphore，使其他线程可以继续前行
+        }
+    } else {
+        counter++;
+        sem_post(&counter_semaphore);   // 线程释放counter_semaphore
+        sem_wait(&barrier_semaphore);   // 线程进入阻塞
+    }
+    ...
+}
+```
+此方式实现路障的优缺点
+```
+优：
+1.线程被sem_wait阻塞时，不会消耗cpu周期，性能更加
+2.counter被重置为0后可以重用
+缺：
+1.barrier_semaphore会导致竞争条件，不可重用
+```
+
+* 条件变量
+```
+条件变量是一个数据结构，允许线程在某个特定条件或事件发生前都处于挂起状态。当事件或条件发生时，另一个线程可以通过信号来唤醒挂起的线程。一个条件变量总是和一个互斥量相关联。
+```
+
+相关函数
+```cpp
+pthread_cond_t // 条件变量的类型
+int pthread_cond_init(
+    pthread_cond_t*             cond_p,     /* out */
+    const pthread_condattr_t*   cond_attr_p /* in */
+);
+int pthread_cond_destroy(pthread_cond_t* cond_p     /* in/out */);
+int pthread_cond_signal(pthread_cond_t* cond_var_p  /* in/out */);
+int pthread_cond_broadcast(pthread_cond_t* cond_var_p   /* in/out */);
+int pthread_cond_wait(
+    pthread_cond_t* cond_var_p,     /* in/out */
+    pthread_mutex_t* mutex_p        /* in/out */
+);
+```
+
+* 条件变量实现路障
+```cpp
+int counter;
+pthread_mutex_t mutex;
+pthread_cond_t cond_var;
+...
+void* Thread_work(...) {
+    ...
+    pthread_mutex_lock(&mutex);
+    counter++;
+    if (counter == thread_count) {
+        counter = 0;
+        pthread_cond_broadcast(&cond_var);
+    } else {
+        while (pthread_cond_wait(&cond_var, &mutex) != 0);
+    }
+    pthread_mutex_unlock(&mutex);
+    ...
+}
+```
+注意：上面else语句使用while循环的原因是因为有其他事件将挂起的线程解锁。
