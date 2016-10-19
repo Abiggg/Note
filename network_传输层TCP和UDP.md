@@ -144,6 +144,7 @@ TCP提供基于滑动窗口协议的流量控制机制；
 拥塞控制程序的估计而确定的窗口值，称为拥塞窗口cwnd，其大小与网络带宽和时延密切相关；
 发送窗口的实际大小取rwnd和cwnd中的最小值；
 ```
+![](https://github.com/zhushh/Note/blob/master/img/tcp_%E5%88%A9%E7%94%A8%E5%8F%AF%E5%8F%98%E7%AA%97%E5%8F%A3%E8%BF%9B%E8%A1%8C%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6.jpg?raw=true)
 
 TCP拥塞控制
 ----
