@@ -49,6 +49,7 @@ UDP协议
 ```
 
 * 首部格式
+
 ![](https://github.com/zhushh/Note/blob/master/img/udp_%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84.jpg?raw=true)
 ```
 源端口号：提供给对方回信时用；
@@ -76,6 +77,7 @@ TCP协议
 ```
 
 * 报文格式
+
 ![](https://github.com/zhushh/Note/blob/master/img/tcp_%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84.jpg?raw=true)
 ```
 源端口和目的端口：各2个字节，
@@ -100,11 +102,13 @@ TCP连接管理(三次握手和四次挥手)
 ----
 TCP是面向连接的协议；每个连接都有三个阶段：连接建立、数据传送和连接释放；
 * 三次握手
+
 ![](https://github.com/zhushh/Note/blob/master/img/tcp_%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.jpg?raw=true)
 ```
 ```
 
 * 四次挥手
+
 ![](https://github.com/zhushh/Note/blob/master/img/tcp_%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpg?raw=true)
 ```
 ```
