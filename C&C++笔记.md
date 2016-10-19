@@ -306,7 +306,7 @@ const关键字
 
 [stackoverflow上的详解](http://stackoverflow.com/questions/1143262/what-is-the-difference-between-const-int-const-int-const-and-int-const)
 
-![](https://raw.githubusercontent.com/zhushh/Note/master/const2.png)
+![](https://raw.githubusercontent.com/zhushh/Note/master/img/const2.png)
 
 ### const修饰类的成员变量及成员函数
 * 1.类的成员变量被const修饰时，需要在构造函数初始化列表初始化
