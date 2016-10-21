@@ -37,7 +37,7 @@ IPv4
 ----
 * IPv4分组的格式
 
-![]()
+![](https://github.com/zhushh/Note/blob/master/img/ip_%E6%95%B0%E6%8D%AE%E6%8A%A5%E7%BB%93%E6%9E%84.jpg?raw=true)
 ```
 版本：IP协议的版本，占4位
 首部长度：IP数据报首部的长度，占4位（IP数据报首部最短为20字节，此时不使用任何选项字段）
