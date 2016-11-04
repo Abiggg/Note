@@ -15,7 +15,7 @@ complete information. In particular, you need to know the exact type of what you
 ```
 
 ### Why does the copy constructor function must use a reference for the paramater
-```
+```c++
 #include <iostream>
 using namespace std;
 
