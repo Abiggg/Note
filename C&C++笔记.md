@@ -8,7 +8,10 @@
 
 ### Why do we not have a virtual constructor in c++?
 ```
-A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. To create an object you need complete information. In particular, you need to know the exact type of what you want to create. Consequently, a "call to a constructor" cannot be virtual.
+A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to
+call a function knowing only any interfaces and not the exact type of the object. To create an object you need 
+complete information. In particular, you need to know the exact type of what you want to create. Consequently, a 
+"call to a constructor" cannot be virtual.
 ```
 
 ### 虚类的构造函数和析构函数执行顺序
