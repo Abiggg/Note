@@ -56,6 +56,11 @@ pthread_join(
     pthread_t   thread,     /* in */
     void**      ret_val_p   /* out */
 );
+
+// use pthread_join(tid, &ret_val_p) to get the ret_val_ptr value
+pthread_exit(
+    void *ret_val_ptr  /* in */
+);
 ```
 
 概念词语
@@ -159,6 +164,9 @@ void* Pth_mat_vect(void*rank) {
 ----
 ```
 互斥锁的简称，是一个特殊的变量，可以通过某些特殊类型的函数，互斥量可以用来限制每次只有一个线程能进入临界区。
+
+锁的粒度：指锁住的数据范围大小，比如锁住整个数组还是对每个数组的元素单独进行加锁；
+锁粒度的大小需要合适，太大对并发性没有什么提升，太小又会消耗太多的锁资源，需要在复杂性和性能之间找到平衡；
 ```
 
 * 函数操作
