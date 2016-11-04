@@ -14,6 +14,32 @@ complete information. In particular, you need to know the exact type of what you
 "call to a constructor" cannot be virtual.
 ```
 
+### Why does the copy constructor function must use a reference for the paramater
+```
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+    A(int a) { var = a;}
+    A(const A& a) { var = a.var;}
+    // using A(A a) {var = a.var; } will cause compiler error
+    ~A() {}
+    int get() const {return var;}
+private:
+    int var;
+};
+
+int main(int argc, char const *argv[])
+{
+    A a(3);
+    A b = a;    // call copy constructor function
+    cout << b.get() << endl;
+    return 0;
+}
+```
+
+
 ### 虚类的构造函数和析构函数执行顺序
 ```c++
 
