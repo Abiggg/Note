@@ -240,6 +240,136 @@ void* Thread_sum(void* rank) {
 }
 ```
 
+读写锁
+----
+```
+与互斥量相似，但是允许更高的并发性。互斥锁要么是锁住状态，要么是不加锁状态，而且一次只有一个线程可以对其加锁。
+读写锁有三种状态：读模式下的加锁状态，写模式下的加锁状态，不加锁状态；
+一次只有一个线程可以占有写模式的读写锁，但是可以有多个线程同时占用读模式的读写锁；
+```
+
+* 操作函数
+```c++
+int pthread_rwlock_init(
+    pthread_rwlock_t* rwlock,           /* out */
+    const pthread_rwlockattr_t* attr    /* in */
+);
+int pthread_rwlock_destroy(
+    pthread_rwlock_t* rwlock    /* in */
+);
+
+// 所有函数成功返回0，否则，返回错误编号
+int pthread_rwlock_rdlock(pthread_rwlock_t* rwlock);
+int pthread_rwlock_wrlock(pthread_rwlock_t* rwlock);
+int pthread_rwlock_unlock(pthread_rwlock_t* rwlock);
+
+int pthread_rwlock_tryrdlock(pthread_rwlock_t* rwlock);
+int pthread_rwlock_trywrlock(pthread_rwlock_t* rwlock);
+```
+
+读写锁实现的作业队列
+----
+```cpp
+#include <iostream>
+#include <queue>
+using namespace std;
+
+#include <cstdio>
+#include <cstdlib>
+#include <pthread.h>
+
+struct Job {
+    struct Job *j_next;
+    struct Job *j_prev;
+    pthread_t j_id;
+};
+
+class JobQueue {
+public:
+    JobQueue() {
+        q_head = NULL;
+        q_tail = NULL;
+        int err;
+        if ((err = pthread_rwlock_init(&q_lock)) != 0) {
+            exit(err);
+        }
+    }
+    ~JobQueue() {
+        struct Job* ptr = q_head;
+        while (q_head != NULL) {
+            q_head = q_head->next;
+            delete ptr;
+            ptr = q_head;
+        }
+        pthread_rwlock_destroy(q_lock);
+    }
+
+    void insert(const struct Job* job) {
+        pthread_rwlock_wrlock(q_lock);
+        job->j_next = q_head;
+        job->j_prev = NULL;
+        if (q_head == NULL) {
+            q_tail = jp;
+        } else {
+            q_head->j_prev = job;
+        }
+        q_head = job;
+        pthread_rwlock_unlock(q_lock);
+    }
+
+    void append(const struct Job* job) {
+        pthread_rwlock_wrlock(q_lock);
+        job->j_prev = q_tail;
+        job->j_next = NULL;
+        if (q_tail == NULL) {
+            q_head = job;
+        } else {
+            q_tail->j_next = job;
+        }
+        q_tail = job;
+        pthread_rwlock_unlock(q_lock);
+    }
+
+    void remove(const struct Job* job) {
+        pthread_rwlock_wrlock(q_lock);
+        if (job == q_head) {
+            q_head = job->j_next;
+            if (q_tail == job) {
+                q_tail = NULL;
+            } else {
+                job->j_next->j_prev = job->j_prev;
+            }
+        } else if (job == q_tail) {
+            q_tail = job->j_prev;
+            job->j_prev->j_next = job->j_next;
+        } else {
+            job->j_prev->j_next = job->j_next;
+            job->j_next->j_prev = job->j_prev;
+        }
+        pthread_rwlock_unlock(q_lock);
+    }
+
+    struct Job* find(pthread_t id) {
+        struct Job *jp;
+
+        if (pthread_rwlock_rdlock(q_lock) != 0)
+            return NULL;
+
+        for (jp = q_head; jp != NULL; jp = jp->next) {
+            if (pthreda_equal(jp->j_id, id))
+                break;
+        }
+        pthread_rwlock_unlock(q_lock);
+        return jp;
+    }
+
+private:
+    struct Job* q_head;
+    struct Job* q_tail;
+    pthread_rwlock_t q_lock;
+};
+```
+
 信号量(semaphore)
 ----
 ```
