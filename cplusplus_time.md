@@ -1,4 +1,4 @@
-## cplusplus time.h
+## cplusplus time.h & sys/time.h
 
 Types
 ----
@@ -82,5 +82,53 @@ int frequency_of_primers(int n) {
         }
     }
     return freq;
+}
+```
+
+struct timeval结构
+----
+include header and function
+```
+#include <sys/time.h>
+
+struct timeval {
+    __time_t tv_sec;        /* seconds */
+    __suseconds_t tv_usec;  /* microseconds */
+}
+
+/* Get the current time of day and timezone information,
+   putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
+   Returns 0 on success, -1 on errors.
+   NOTE: This form of timezone information is obsolete.
+   Use the functions and variables declared in <time.h> instead.  */
+extern int gettimeofday (struct timeval *__restrict __tv,
+             __timezone_ptr_t __tz) __THROW __nonnull ((1));
+
+```
+
+example
+```cpp
+#include <iostream>
+using namespace std;
+
+#include <cstdio>
+#include <cstdlib>
+#include <time.h>
+#include <sys/time.h>
+
+int main(int argc, char const *argv[])
+{
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+    int ans = 0;
+    for (int i = 0; i < 10000000; i++) {
+        ans = 1;
+    }
+    gettimeofday(&end, NULL);
+    long long startusec, endusec;
+    startusec = start.tv_sec*1000000 + start.tv_usec;
+    endusec = end.tv_sec*1000000 + end.tv_usec;
+    cout << "Use time: " << endusec - startusec << endl;
+    return 0;
 }
 ```
