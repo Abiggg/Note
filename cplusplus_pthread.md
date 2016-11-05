@@ -579,6 +579,119 @@ void* Thread_work(...) {
 ```
 注意：上面else语句使用while循环的原因是因为有其他事件将挂起的线程解锁。
 
+
+pthread自带的屏障
+----
+```cpp
+int pthread_barrier_init(
+    pthread_barrier_t* barrier,         /* out */
+    const pthread_barrierattr_t* attr,  /* in */
+    unsigned int count  /* in */
+);
+int pthread_barrier_destroy(
+    pthread_barrier_t* barrier
+);
+
+int pthread_barrier_wait(
+    pthread_barrier_t* barrier
+);
+```
+pthread_barrier_wait函数给其中一个线程返回`PTHREAD_BARRIER_SERIAL_THREAD`,其他线程得到的返回值是0；
+这使得一个线程可以作为主线程，它可以工作在其他所有线程已完成的工作结果上；
+
+* example
+```cpp
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <limits.h>
+#include <sys/time.h>
+
+#include <pthread.h>
+
+#define NTHREAD 8
+#define NUMBERS 10000000
+#define NSIZE  NUMBERS / NTHREAD
+
+long nums[NUMBERS];     // the array to be sorted
+long snums[NUMBERS];    // the sorted array
+long numscopy[NUMBERS]; // test single thread time
+
+pthread_barrier_t b;
+
+int compare(const void* a, const void* b) {
+    long _a = *((long*)a);
+    long _b = *((long*)b);
+    return _a - _b;
+}
+
+void* thread_fn(void* args) {
+    long idx = (long)args;
+    qsort(&nums[idx], NSIZE, sizeof(long), compare);
+    pthread_barrier_wait(&b);
+    return NULL;
+}
+
+void merge() {
+    long idx[NTHREAD];
+    long i;
+    for (i = 0; i < NTHREAD; i++)
+        idx[i] = i*NSIZE;
+    long index;
+    long cur;
+    long num;
+    for (index = 0; index < NUMBERS; index++) {
+        cur = 0;
+        num = LONG_MAX;
+        for (i = 0; i < NTHREAD; i++) 
+            if (idx[i] < (i+1)*NSIZE && nums[idx[i]] < num) {
+                num = nums[idx[i]];
+                cur = i;
+            }
+        snums[index] = nums[idx[cur]];
+        idx[cur]++;
+    }
+}
+
+int main(int argc, char const *argv[])
+{
+    srand(time(NULL));
+    struct timeval start, end;
+    long long startusec, endusec;
+    pthread_t tid;
+    long i;
+    for (i = 0; i < NUMBERS; i++) {
+        nums[i] = (rand() % 99999);
+        numscopy[i] = nums[i];
+    }
+
+    pthread_barrier_init(&b, NULL, NTHREAD+1);
+
+    gettimeofday(&start, NULL);
+    for (i = 0; i < NTHREAD; i++) {
+        pthread_create(&tid, NULL, thread_fn, (void*)(i*NSIZE));
+    }
+    pthread_barrier_wait(&b);
+    merge();
+    gettimeofday(&end, NULL);
+
+    // for (i = 0; i < NUMBERS; i++) {
+    //     printf("%ld\n", snums[i]);
+    // }
+    startusec = start.tv_sec * 1000000 + start.tv_usec;
+    endusec = end.tv_sec * 1000000 + end.tv_usec;
+    printf("%d threads sorted took %.4f seconds\n", NTHREAD, (endusec - startusec) / 1000000.0);
+
+    gettimeofday(&start, NULL);
+    qsort(numscopy, NUMBERS, sizeof(long), compare);
+    gettimeofday(&end, NULL);
+    startusec = start.tv_sec * 1000000 + start.tv_usec;
+    endusec = end.tv_sec * 1000000 + end.tv_usec;
+    printf("single thread sorted took %.4f seconds\n", (endusec - startusec) / 1000000.0);
+    return 0;
+}
+```
+
 缓存、缓存一致性和为共享
 ----
 * 缓存(Cache)
