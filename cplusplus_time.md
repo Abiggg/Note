@@ -88,7 +88,7 @@ int frequency_of_primers(int n) {
 struct timeval结构
 ----
 include header and function
-```
+```cpp
 #include <sys/time.h>
 
 struct timeval {
