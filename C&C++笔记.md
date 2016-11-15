@@ -526,7 +526,7 @@ int main(int argc, char const *argv[])
 
 ### static_cast
 完成相关类型之间的转换
-```
+```cpp
 #include <vector>
 #include <iostream>
  
@@ -608,7 +608,7 @@ int main()
 
 ### reinterpret_cast
 完成不相关类型直接的转换
-```
+```cpp
 #include <cstdint>
 #include <cassert>
 #include <iostream>
