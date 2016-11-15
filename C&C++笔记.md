@@ -521,7 +521,7 @@ int main(int argc, char const *argv[])
 }
 
 //输出结果为：
-//downcast from b1 to d successful
+//downcast from b2 to d successful
 ```
 
 ### static_cast
