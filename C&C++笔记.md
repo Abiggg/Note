@@ -452,6 +452,202 @@ void foo(const T& t) {
 ```
 这样编译器就确定T::bar是一个类型名，p自然就被解释为指向T::bar类型的对象的指针了。
 
+
+static_cast,reinterpret_cast,const_cast和dynamic_cast
+----
+### const_cast
+用于移除变量的const
+```cpp
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+    A(int i): val(i) {}
+    void constFunc(int i) const {
+        // this->val = i;   // compile error: this is a pointer to const
+        const_cast<A*>(this)->val = i;  // OK as long as the type object isn't const
+    }
+    int getVal() const {
+        return val;
+    }
+private:
+    int val;
+};
+
+int main(int argc, char const *argv[])
+{
+    A a(2);
+    cout << a.getVal() << endl;
+    a.constFunc(4);
+    cout << a.getVal() << endl;
+    return 0;
+}
+
+//上面的输出结果为：
+//2
+//4
+```
+
+### dynamic_cast
+可安全地把基类指针转换成派生类指针，如果不能转换那么会赋值出错
+```cpp
+#include <iostream>
+using namespace std;
+
+class B {
+public:
+    virtual ~B() {}
+};
+
+class D : public B {
+public:
+    virtual void name() {}
+};
+
+int main(int argc, char const *argv[])
+{
+    B *b1 = new B;
+    if (D *d = dynamic_cast<D*>(b1)) {
+        std::cout << "downcast from b1 to d successful\n";
+        d->name();  // safe to call
+    }
+    B *b2 = new D;
+    if (D *d = dynamic_cast<D*>(b2)) {
+        std::cout << "downcast from b2 to d successful\n";
+        d->name();  // safe to call
+    }
+    return 0;
+}
+
+//输出结果为：
+//downcast from b1 to d successful
+```
+
+### static_cast
+完成相关类型之间的转换
+```
+#include <vector>
+#include <iostream>
+ 
+struct B {
+    int m = 0;
+    void hello() const {
+        std::cout << "Hello world, this is B!\n";
+    }
+};
+struct D : B {
+    void hello() const {
+        std::cout << "Hello world, this is D!\n";
+    }
+};
+ 
+enum class E { ONE = 1, TWO, THREE };
+enum EU { ONE = 1, TWO, THREE };
+ 
+int main()
+{
+    // 1: initializing conversion
+    int n = static_cast<int>(3.14); 
+    std::cout << "n = " << n << '\n';
+    std::vector<int> v = static_cast<std::vector<int>>(10);
+    std::cout << "v.size() = " << v.size() << '\n';
+ 
+    // 2: static downcast
+    D d;
+    B& br = d; // upcast via implicit conversion
+    br.hello();
+    D& another_d = static_cast<D&>(br); // downcast
+    another_d.hello();
+ 
+    // 3: lvalue to xvalue
+    std::vector<int> v2 = static_cast<std::vector<int>&&>(v);
+    std::cout << "after move, v.size() = " << v.size() << '\n';
+ 
+    // 4: discarded-value expression
+    static_cast<void>(v2.size());
+ 
+    // 5. inverse of implicit conversion
+    void* nv = &n;
+    int* ni = static_cast<int*>(nv);
+    std::cout << "*ni = " << *ni << '\n';
+ 
+    // 6. array-to-pointer followed by upcast
+    D a[10];
+    B* dp = static_cast<B*>(a);
+ 
+    // 7. scoped enum to int or float
+    E e = E::ONE;
+    int one = static_cast<int>(e);
+    std::cout << one << '\n';
+ 
+    // 8. int to enum, enum to another enum
+    E e2 = static_cast<E>(one);
+    EU eu = static_cast<EU>(e2);
+ 
+    // 9. pointer to member upcast
+    int D::*pm = &D::m;
+    std::cout << br.*static_cast<int B::*>(pm) << '\n';
+ 
+    // 10. void* to any type
+    void* voidp = &e;
+    std::vector<int>* p = static_cast<std::vector<int>*>(voidp);
+}
+
+// output:
+// n = 3
+// v.size() = 10
+// Hello world, this is B!
+// Hello world, this is D!
+// after move, v.size() = 0
+// *ni = 3
+// 1
+// 0
+```
+
+
+### reinterpret_cast
+完成不相关类型直接的转换
+```
+#include <cstdint>
+#include <cassert>
+#include <iostream>
+int f() { return 42; }
+int main()
+{
+    int i = 7;
+ 
+    // pointer to integer and back
+    uintptr_t v1 = reinterpret_cast<uintptr_t>(&i); // static_cast is an error
+    std::cout << "The value of &i is 0x" << std::hex << v1 << '\n';
+    int* p1 = reinterpret_cast<int*>(v1);
+    assert(p1 == &i);
+ 
+    // pointer to function to another and back
+    void(*fp1)() = reinterpret_cast<void(*)()>(f);
+    // fp1(); undefined behavior
+    int(*fp2)() = reinterpret_cast<int(*)()>(fp1);
+    std::cout << std::dec << fp2() << '\n'; // safe
+ 
+    // type aliasing through pointer
+    char* p2 = reinterpret_cast<char*>(&i);
+    if(p2[0] == '\x7')
+        std::cout << "This system is little-endian\n";
+    else
+        std::cout << "This system is big-endian\n";
+ 
+    // type aliasing through reference
+    reinterpret_cast<unsigned int&>(i) = 42;
+    std::cout << i << '\n';
+}
+
+// output:
+// The value of &i is 0x7ffeb2c3a99c
+// 42
+// This system is little-endian
+// 42
+```
+
 字节序与struct结构体
 ----
 ### 字节序
