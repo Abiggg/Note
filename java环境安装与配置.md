@@ -116,7 +116,7 @@ if [[ "$jdk_source" == "help" ]]; then
     exit 0
 fi
 
-echo "Checke jdk source ..."
+echo "Check jdk source ..."
 if [[ -z $jdk_source || ! -e $jdk_source ]]; then
     wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
     jdk_source=./jdk-8u51-linux-x64.tar.gz
@@ -125,13 +125,13 @@ else
     echo "Install jdk from source "$jdk_source
 fi
 
-echo "Checke /usr/java directory exist ..."
+echo "Check /usr/java directory exist ..."
 # 解压tar并安装到/usr/java中
 if [[ ! -e /usr/java ]]; then
     mkdir /usr/java || echo "Install failed" && exit 1
 fi
 
-echo "Checke jdk1.8.0_51 directory exist ...."
+echo "Check jdk1.8.0_51 directory exist ...."
 if [[ ! -e jdk1.8.0_51 ]]; then
     tar -zxvf $jdk_source  || echo "Install failed" &&  exit 2
 fi
