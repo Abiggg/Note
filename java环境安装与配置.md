@@ -43,8 +43,19 @@ java-1.7.0-openjdk-devel-1.7.0.75-2.5.4.2.el7_0.x86_64
 完整脚本
 ----
 为方便以后配置使用，编写成脚本如下：
+
+centos
 ```shell
 #!/bin/bash
+
+$jdk_source=$1
+
+if [[ "$jdk_source" == "help" ]]; then
+    echo "Usage: $0 [jdk_source_option]"
+    echo "Example 1: $0"
+    echo "Example 2: $0 /tmp/jdk-8u51-linux-x64.tar.gz"
+    exit 0
+fi
 
 for i in $(rpm -qa | grep openjdk | grep -v grep)
 do
@@ -55,24 +66,87 @@ done
 if [[ ! -z $(rpm -qa | grep openjdk | grep -v grep) ]]; then
 	echo "--->Failed to remove openjdk"
 else
-	if [[ ! -e "jdk-8u51-linux-x64.tar.gz" ]]; then
-		wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
-
-		echo "Download jdk8 from oracle success."
+	echo "Check jdk source ..."
+	if [[ -z $jdk_source || ! -e $jdk_source ]]; then
+	    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
+	    jdk_source=./jdk-8u51-linux-x64.tar.gz
+	    echo "Download jdk8 from oracle success."
+	else
+	    echo "Install jdk from source "$jdk_source
 	fi
 
+	echo "Check /usr/java directory exist ..."
 	# 解压tar并安装到/usr/java中
 	if [[ ! -e /usr/java ]]; then
-		mkdir /usr/java
+	    mkdir /usr/java || echo "Install failed" && exit 1
 	fi
-	tar -zxvf jdk-8u51-linux-x64.tar.gz
-	mv jdk1.8.0_51 /usr/java/jdk1.8.0_51
+
+	echo "Check jdk1.8.0_51 directory exist ...."
+	if [[ ! -e jdk1.8.0_51 ]]; then
+	    tar -zxvf $jdk_source  || echo "Install failed" &&  exit 2
+	fi
+
+	echo "Moved jdk1.8.0_51 to /usr/java ..."
+	mv jdk1.8.0_51 /usr/java/jdk1.8.0_51  || echo "Install failed" &&  exit 3
 
 	# 配置java环境变量
+	echo "setup java exvironment ..."
 	echo "export JAVA_HOME=/usr/java/jdk1.8.0_51" >> /etc/profile
-	echo -e 'export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'
-	echo -e 'export PATH=$PATH:$JAVA_HOME/bin'
+	echo -e 'export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib'
+	echo -e 'export PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin'
 
+	echo "Reload source /etc/profile"
 	source /etc/profile
+
+	echo "Install success."
+
 fi
+```
+
+ubuntu
+```shell
+#!/bin/bash
+
+jdk_source=$1
+
+if [[ "$jdk_source" == "help" ]]; then
+    echo "Usage: $0 [jdk_source_option]"
+    echo "Example 1: $0"
+    echo "Example 2: $0 /tmp/jdk-8u51-linux-x64.tar.gz"
+    exit 0
+fi
+
+echo "Checke jdk source ..."
+if [[ -z $jdk_source || ! -e $jdk_source ]]; then
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
+    jdk_source=./jdk-8u51-linux-x64.tar.gz
+    echo "Download jdk8 from oracle success."
+else
+    echo "Install jdk from source "$jdk_source
+fi
+
+echo "Checke /usr/java directory exist ..."
+# 解压tar并安装到/usr/java中
+if [[ ! -e /usr/java ]]; then
+    mkdir /usr/java || echo "Install failed" && exit 1
+fi
+
+echo "Checke jdk1.8.0_51 directory exist ...."
+if [[ ! -e jdk1.8.0_51 ]]; then
+    tar -zxvf $jdk_source  || echo "Install failed" &&  exit 2
+fi
+
+echo "Moved jdk1.8.0_51 to /usr/java ..."
+mv jdk1.8.0_51 /usr/java/jdk1.8.0_51  || echo "Install failed" &&  exit 3
+
+# 配置java环境变量
+echo "setup java exvironment ..."
+echo "export JAVA_HOME=/usr/java/jdk1.8.0_51" >> /etc/profile
+echo -e 'export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib'
+echo -e 'export PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin'
+
+echo "Reload source /etc/profile"
+source /etc/profile
+
+echo "Install success."
 ```

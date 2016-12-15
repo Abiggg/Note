@@ -648,6 +648,17 @@ int main()
 // 42
 ```
 
+左值引用和右值引用
+----
+### 左值引用和右值引用
+[http://en.cppreference.com/w/cpp/language/reference](http://en.cppreference.com/w/cpp/language/reference)
+```
+```
+
+### 移动构造函数和赋值运算符
+[https://msdn.microsoft.com/zh-cn/library/dd293665.aspx](https://msdn.microsoft.com/zh-cn/library/dd293665.aspx)
+
+
 字节序与struct结构体
 ----
 ### 字节序

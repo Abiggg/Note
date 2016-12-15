@@ -1,5 +1,9 @@
-## 对称加密和非对称加密
-
+---
+layout: post
+title:  "对称加密"
+date:   2016-11-16 03:38:00 +0800
+categories: jekyll update
+---
 对称加密
 ----
 
