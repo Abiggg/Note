@@ -48,7 +48,7 @@ centos
 ```shell
 #!/bin/bash
 
-$jdk_source=$1
+jdk_source=$1
 if [[ -z $jdk_source ]]; then
     jdk_source=./jdk-8u51-linux-x64.tar.gz
 fi
