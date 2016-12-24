@@ -1,8 +1,8 @@
 ### Linux环境安装配置java
 
-检查并删掉默认的openjdk
+检查并删掉默认的openjdk [可选]
 ----
-以centos环境为例子
+以centos环境为例子，（如果不想删除原来的就忽略此步骤）
 
 查看命令如下：
 ```shell
@@ -60,15 +60,15 @@ if [[ "$jdk_source" == "help" ]]; then
     exit 0
 fi
 
-for i in $(rpm -qa | grep openjdk | grep -v grep)
-do
-	echo "Delete rpm -> "$i
-	rpm -e -nodeps $i
-done
+#for i in $(rpm -qa | grep openjdk | grep -v grep)
+#do
+#	echo "Delete rpm -> "$i
+#	rpm -e -nodeps $i
+#done
 
-if [[ ! -z $(rpm -qa | grep openjdk | grep -v grep) ]]; then
-	echo "--->Failed to remove openjdk"
-else
+#if [[ ! -z $(rpm -qa | grep openjdk | grep -v grep) ]]; then
+#	echo "--->Failed to remove openjdk"
+#else
 	echo "Check jdk source ..."
 	if [[ ! -e $jdk_source ]]; then
 	    echo "Jdk doesn't exist, start downloading ..."
@@ -102,7 +102,7 @@ else
 	source /etc/profile
 
 	echo "Install success."
-fi
+#fi
 ```
 
 ubuntu
