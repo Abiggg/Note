@@ -73,6 +73,7 @@ fi
 	if [[ ! -e $jdk_source ]]; then
 	    echo "Jdk doesn't exist, start downloading ..."
 	    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
+	    jdk_source=./jdk-8u51-linux-x64.tar.gz
 	    echo "Download jdk8 from oracle success."
 	else
 	    echo "Install jdk from source "$jdk_source
