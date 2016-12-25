@@ -122,37 +122,38 @@ if [[ "$jdk_source" == "help" ]]; then
     exit 0
 fi
 
-echo "Check jdk source ..."
-if [[ ! -e $jdk_source ]]; then
-    echo "Jdk doesn't exist, start downloading ..."
-    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
-    echo "Download jdk8 from oracle success."
+if [ -z `which java | grep java` ]; then
+    echo "Check jdk source ..."
+    if [[ ! -e $jdk_source ]]; then
+        echo "Jdk doesn't exist, start downloading ..."
+        wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
+        jdk_source=./jdk-8u51-linux-x64.tar.gz
+        echo "Download jdk8 from oracle success."
+    else
+        echo "Install jdk from source "$jdk_source
+    fi
+
+    echo "Check jdk1.8.0_51 directory exist ...."
+    if [[ ! -e jdk1.8.0_51 ]]; then
+        tar -zxvf $jdk_source || exit 1
+    fi
+
+    echo "Move jdk1.8.0_51 to /usr/java"
+    mv jdk1.8.0_51 /opt/jdk1.8.0_51 || exit 2
+
+    # 配置java环境变量
+    echo "setup java exvironment ..."
+    echo "export JAVA_HOME=/opt/jdk1.8.0_51" >> /etc/profile
+    echo -e 'export CLASSPATH=.:$CLASSPATH:$JAVA_HOME/jre/lib:$JAVA_HOME/lib' >> /etc/profile
+    echo -e 'export PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin' >> /etc/profile
+
+    echo "Reload source /etc/profile"
+    source /etc/profile
+
+    echo "Install success."
+
 else
-    echo "Install jdk from source "$jdk_source
+    echo "Java has installed."
 fi
 
-echo "Check /usr/java directory exist ..."
-# 解压tar并安装到/usr/java中
-if [[ ! -e /usr/java ]]; then
-    mkdir /usr/java || exit 1
-fi
-
-echo "Check jdk1.8.0_51 directory exist ...."
-if [[ ! -e jdk1.8.0_51 ]]; then
-    tar -zxvf $jdk_source || exit 2
-fi
-
-echo "Move jdk1.8.0_51 to /usr/java"
-mv jdk1.8.0_51 /usr/java/jdk1.8.0_51 || exit 3
-
-# 配置java环境变量
-echo "setup java exvironment ..."
-echo "export JAVA_HOME=/usr/java/jdk1.8.0_51" >> /etc/profile
-echo -e 'export CLASSPATH=.:$CLASSPATH:$JAVA_HOME/jre/lib:$JAVA_HOME/lib' >> /etc/profile
-echo -e 'export PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin' >> /etc/profile
-
-echo "Reload source /etc/profile"
-source /etc/profile
-
-echo "Install success."
 ```
