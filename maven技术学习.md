@@ -19,7 +19,6 @@ Java环境的配置，并设置有JAVA_HOME环境变量;
 下载  apache-maven-3.3.9-bin.tar.gz安装包;运行下面命令进行解压：
 ```
 $ tar -zxvf apache-maven-3.3.9-bin.tar.gz
-
 ```
 移到/usr/local目录：
 
@@ -31,8 +30,6 @@ $ sudo mv apache-maven-3.3.9 /usr/local/
 
 编辑/etc/profile文件，添加/修改下面环境变量内容:
 ```
-```
-# setup maven environment variables
 export M2_HOME=/usr/local/apache-maven
 export MAVEN_OPTS="-Xms256m -Xmx512m"
 export MAVEN_HOME=/usr/local/apache-maven
