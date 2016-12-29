@@ -1,6 +1,7 @@
 ---
 name: maven
 date: 2016-12-29
+update: 2016-12-29
 keyword: maven
 ---
 
@@ -61,7 +62,7 @@ Maven 入门例子
     ```
     $ mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
     ```
-    第一次运行需要等一会下载一些东西，在完成下载后会自动配置插件到环境中。
+    第一次运行需要等一会，因为maven会下载项目所需要的所有插件和依赖，
     然后你会看到在当前目录下会创建一个my-app的项目目录;`cd my-app`进入项目目录,目录结构如下：
     ```
     my-app
@@ -87,7 +88,7 @@ Maven 入门例子
 * POM介绍
 
     POM是工程对象模型，是指文件pom.xml，这个文件是maven项目配置的核心。包含了关于工程和各种配置细节的信息，Maven 使用这些信息构建工程。
-    所有的项目都只有一个POM文件，文件最少需要包含groupId， artifactId， version三个信息;其中，
+    所有的项目都只有一个POM文件，文件需要包含groupId， artifactId， version三个信息;其中，
 
         groupId：描述的是项目名称，由于有的项目并不是一个jar包构成的，而是由很多的jar包组成的。因此这个groupId就是整个项目的名称
 
@@ -95,7 +96,7 @@ Maven 入门例子
 
         version:描述包的版本号
 
-    详细信息参考[https://maven.apache.org/pom.html](https://maven.apache.org/pom.html)
+    详细信息参考[https://maven.apache.org/guides/introduction/introduction-to-the-pom.html](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html)和[https://maven.apache.org/pom.html](https://maven.apache.org/pom.html)
 
 
 * 编译打包项目
@@ -123,4 +124,47 @@ Maven 入门例子
     ```
     $ java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App 
     ```
-    看到输出Hello World， 成功运行第一个maven例子，更多详细使用参考链接[https://maven.apache.org/guides/getting-started/index.html](https://maven.apache.org/guides/getting-started/index.html)
+    看到输出`Hello World`， 就说明成功运行第一个maven例子;
+
+* 参考教程
+[https://maven.apache.org/guides/getting-started/index.html#What_is_Maven](https://maven.apache.org/guides/getting-started/index.html#What_is_Maven)
+
+
+Maven 常用命令
+----
+
+创建项目
+```
+mvn -B archetype:generate \ 
+    -DarchetypeGroupId=org.apache.maven.archetypes \
+    -DgroupId=com.mycompany.app \
+    -DartifactId=my-app
+```
+
+编译项目
+```
+mvn compile
+```
+
+运行测试
+```
+mvn test
+```
+
+打包项目
+```
+mvn package
+```
+
+安装项目
+```
+mvn install
+```
+
+其他命令参数
+```
+mvn site
+mvn clean
+mvn idea:idea
+mvn eclipse:eclipse
+```
