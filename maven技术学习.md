@@ -1,8 +1,8 @@
-----
+---
 name: maven
 date: 2016-12-29
 keyword: maven
-----
+---
 
 ## Maven技术学习
 
