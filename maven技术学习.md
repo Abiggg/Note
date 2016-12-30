@@ -140,6 +140,11 @@ mvn -B archetype:generate \
     -DgroupId=com.mycompany.app \
     -DartifactId=my-app
 ```
+-B：参数是指进行创建过程不需要交互（也就是不需要手动输入groupId、artifactId这些，而是使用指定）;
+
+-DgroupId：这个参数是由两个构成，其中-D表示定义，-DgroupId就是定义groupId的意思，所以上面创建的groupId的值就是my-app;
+
+使用maven可以创建很多种应用，包括webapp、j2ee、maven插件、maven项目等，详细参考链接[https://maven.apache.org/guides/introduction/introduction-to-archetypes.html](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)
 
 编译项目
 ```
