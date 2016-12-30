@@ -1,7 +1,7 @@
 ---
 name: maven
 date: 2016-12-29
-update: 2016-12-29
+update: 2016-12-30
 keyword: maven
 ---
 
@@ -250,7 +250,7 @@ Maven创建标准Servlet程序过程
     
 * 编辑项目依赖等信息
     
-    编辑pom.xml文件，输入如下内容：
+    编辑pom.xml文件，可以用下面内容覆盖掉原来的：
     ```xml
     <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -288,12 +288,13 @@ Maven创建标准Servlet程序过程
 
 * 编译运行项目
     
-    使用下面命令进行编译运行，可能需要等一会，因为需要下载安装jetty，
+    使用下面命令进行编译运行，可能需要等一会，因为需要下载安装jetty
     ```
     mvn jetty:run package
     ```
-    成功运行后应该会看到类似如下输出：
+    成功运行后应该会在最后看到类似如下输出：
     ```
+    ...
     [INFO] Started ServerConnector@7afb1741{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}
     [INFO] Started @4816ms
     [INFO] Started Jetty Server
