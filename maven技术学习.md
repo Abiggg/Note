@@ -21,10 +21,11 @@ Maven 环境安装与配置
     ```
     $ tar -zxvf apache-maven-3.3.9-bin.tar.gz
     ```
-    移到/usr/local目录：
+    移到/usr/local目录，并创建链接apache-maven：
 
     ```
     $ sudo mv apache-maven-3.3.9 /usr/local/
+    $ sudo ln -s /usr/local/apache-maven-3.3.9 /usr/local/apache-maven
     ```
 
 * 添加命令到环境变量：
