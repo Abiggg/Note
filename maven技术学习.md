@@ -306,3 +306,7 @@ Maven创建标准Servlet程序过程
     session=58tpdbbynuze769l01r97pjx 
     ```
  
+ * 备注
+ 
+    可以参考一个教程来创建servlet程序,链接是[http://www.eclipse.org/jetty/documentation/current/maven-and-jetty.html]（http://www.eclipse.org/jetty/documentation/current/maven-and-jetty.html）
+
