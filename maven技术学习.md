@@ -173,3 +173,134 @@ mvn clean
 mvn idea:idea
 mvn eclipse:eclipse
 ```
+
+Maven创建标准Servlet程序过程
+----
+* 使用maven创建项目
+
+    ```
+    mvn -B archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes \
+        -DarchetypeArtifactId=maven-archetype-webapp \
+        -DgroupId=com.mycompany.app \
+        -DartifactId=my-app
+    ```
+    之后就会创建出项目my-app，目录结构如下：
+    ```
+    my-app
+    |-- pom.xml
+    `-- src
+        |-- main
+            |-- resources
+            `-- webapp
+                |-- index.jsp
+                `-- WEB-INF
+                    `-- web.xml
+    ```
+
+* 创建源代码目录及文件
+
+    我们手动创建src/main/java/org/example源代码目录，并添加文件HelloServlet.java文件，文件输入下面内容：
+    ```java
+    package org.example;
+
+    import java.io.IOException;
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+
+    public class HelloServlet extends HttpServlet
+    {
+            protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+            {
+                    response.setContentType("text/html");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().println("<h1>Hello Servlet</h1>");
+                    response.getWriter().println("session=" + request.getSession(true).getId());
+            }
+    }
+    ```
+
+* 编辑webapp信息
+
+    编辑src/main/webapp/WEB-INF/web.xml文件，把下面内容覆盖掉原来的就可以：
+    ```xml
+    <!DOCTYPE web-app PUBLIC
+     "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+     "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+    <web-app
+       xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+       metadata-complete="false"
+       version="3.1">
+
+      <servlet>
+            <servlet-name>Hello</servlet-name>
+            <servlet-class>org.example.HelloServlet</servlet-class>
+      </servlet>
+      <servlet-mapping>
+            <servlet-name>Hello</servlet-name>
+            <url-pattern>/hello/*</url-pattern>
+      </servlet-mapping>
+
+    </web-app>
+    ```
+    
+* 编辑项目依赖等信息
+    
+    编辑pom.xml文件，输入如下内容：
+    ```xml
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>com.mycompany.app</groupId>
+      <artifactId>JettyMavenHelloWarApp</artifactId>
+      <packaging>war</packaging>
+      <version>1.0-SNAPSHOT</version>
+      <name>JettyMavenHelloWarApp Maven Webapp</name>
+
+      <properties>
+              <jettyVersion>9.3.7.v20160115</jettyVersion>
+      </properties>
+
+      <dependencies>
+            <dependency>
+              <groupId>javax.servlet</groupId>
+              <artifactId>javax.servlet-api</artifactId>
+              <version>3.1.0</version>
+              <scope>provided</scope>
+            </dependency>
+      </dependencies>
+
+      <build>
+            <plugins>
+              <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>${jettyVersion}</version>
+              </plugin>
+            </plugins>
+      </build>
+    </project>
+    ```
+
+* 编译运行项目
+    
+    使用下面命令进行编译运行，可能需要等一会，因为需要下载安装jetty，
+    ```
+    mvn jetty:run package
+    ```
+    成功运行后应该会看到类似如下输出：
+    ```
+    [INFO] Started ServerConnector@7afb1741{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}
+    [INFO] Started @4816ms
+    [INFO] Started Jetty Server
+    ```
+    然后访问浏览器，输入[http://localhost:8080/hello](http://localhost:8080/hello) 可以看到类似下面输出：
+    ```
+    Hello Servlet
+    session=58tpdbbynuze769l01r97pjx 
+    ```
+ 
