@@ -92,6 +92,7 @@ CGI介绍及配置
 ----
 
 *  CGI简单介绍
+
     Common Gateway Interface(cgi), 通用网关接口， CGI是外部应用程序（CGI程序）与Web服务器之间的接口标准，是在CGI程序和Web服务器之间传递信息的过程。wiki链接[https://en.wikipedia.org/wiki/Common_Gateway_Interface](https://en.wikipedia.org/wiki/Common_Gateway_Interface)
 
 * 配置Apache加载cgi模块
