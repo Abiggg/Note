@@ -8,8 +8,6 @@ keyword:
 Apache 安装
 ----
 
-官网地址 [http://httpd.apache.org/docs/2.4/install.html](http://httpd.apache.org/docs/2.4/install.html)
-
 * 安装前环境准备
 
     Arp安装，下载地址[http://www-us.apache.org/dist//apr/apr-1.5.2.tar.gz](http://www-us.apache.org/dist//apr/apr-1.5.2.tar.gz)
@@ -35,23 +33,29 @@ Apache 安装
     $ sudo make install
     ```
 
-* 安装命令
+* Apache安装
 
-    输入下面该命令进行apache的源码编译安装
+    官网地址 [http://httpd.apache.org/docs/2.4/install.html](http://httpd.apache.org/docs/2.4/install.html)
+    
+    下载解压后，进入解压后的目录，输入下面该命令进行apache的源码编译安装
     ```
     $ ./configure
     $ make
     $ sudo make install
     ```
 
-* 检测安装
+* 检测安装成功
 
-    运行下面命令，然后会看到输出错误：
+    运行下面命令：
+    ```
+    $ sudo /usr/local/apache2/bin/apachectl -k start
+    ```
+    然后如果看到输出如下错误：
     ```
     $ sudo /usr/local/apache2/bin/apachectl -k start
     /usr/local/apache2/bin/httpd: error while loading shared libraries: libpcre.so.1: cannot open shared object file: No such file or directory
     ```
-    使用ldd命令检测依赖：
+    表示依赖链接出错，使用ldd命令检测依赖：
     ```
     $ ldd /usr/local/apache2/bin/httpd
         linux-vdso.so.1 =>  (0x00007ffcc8f17000)
@@ -69,11 +73,11 @@ Apache 安装
     ```
     $ sudo ln -s /usr/local/lib/libpcre.so.1 /lib
     ```
-    再次运行httpd看一下：
+    再次启动apache服务看一下：
     ```
     $ sudo /usr/local/apache2/bin/apachectl -k start
     ```
-    然后访问浏览器http://localhost，就可以看到下面输出
+    没有报错，然后访问浏览器[http://localhost](http://localhost)， 就可以看到下面输出
     ```
     It works!
     ```
@@ -86,13 +90,13 @@ Apache 安装
 
 CGI介绍及配置
 ----
-Common Gateway Interface(cgi), 通用网关接口，运行在服务器上为web服务提供标准的接口协议的程序；
 
-编辑刚刚安装配置好的apache配置文件/usr/local/apache2/conf/http.conf来进行配置
+*  CGI简单介绍
+    Common Gateway Interface(cgi), 通用网关接口， CGI是外部应用程序（CGI程序）与Web服务器之间的接口标准，是在CGI程序和Web服务器之间传递信息的过程。wiki链接[https://en.wikipedia.org/wiki/Common_Gateway_Interface](https://en.wikipedia.org/wiki/Common_Gateway_Interface)
 
-* 加载cgi模块
+* 配置Apache加载cgi模块
     
-    找到下面这行内容
+    编辑刚刚安装配置好的apache配置文件/usr/local/apache2/conf/http.conf来进行配置，找到下面这行内容
     ```
     #LoadModule cgid_module modules/mod_cgid.so
     ```
@@ -146,7 +150,7 @@ Common Gateway Interface(cgi), 通用网关接口，运行在服务器上为web�
     ```
     去掉注释，然后添加自己需要支持的cgi脚本文件，比如python的，就设置如下：
     ```
-    AddHandler cgi-script .cgi .py
+    AddHandler cgi-script .cgi .py .pl
     ```
     其他的类似，配置好这一步就基本配置好cgi，重启一下apache服务就可以；
     ```
@@ -207,5 +211,5 @@ Common Gateway Interface(cgi), 通用网关接口，运行在服务器上为web�
     }
     ```
     需要注意的是，语句`cout << "Content-type:text/html" << endl << endl;`一定要有两个换行，
-    因为这是http协议响应的结构;使用浏览其访问跟上面python的访问类似。
-
+    因为这是http协议响应的报文结构决定的;另外，还需要注意编译好后的可执行程序没有后缀名，那可以直接重命名为hello.cgi；
+    这样就可以通过http://localhost/cgi-bin/hello.cgi 或者 http://127.0.0.1/cgi-bin/hello.cgi 来访问刚刚编译好的cpp可执行程序;
