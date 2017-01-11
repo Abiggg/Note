@@ -191,6 +191,7 @@ keyword: web service
 项目目录结构参考
 ----
 
+```
 webservice
 |-- HelloService
 |   `-- src
@@ -219,6 +220,7 @@ webservice
                     `-- example
                         |-- DynamicClient.java
                         `-- HelloService.java
+```
 
 参考阅读链接
 ----
