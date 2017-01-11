@@ -2,7 +2,7 @@
 name: webService学习.md
 date: Tue 10 Jan 2017 03:06:32 PM CST
 update: Tue 10 Jan 2017 03:06:32 PM CST
-keyword: web service cxf apache-cxf
+keyword: web service 
 ---
 
 
@@ -13,14 +13,14 @@ keyword: web service cxf apache-cxf
 
     使用下面命令创建HelloService项目
     ```
-    $ mkdir -p HelloService/demo/ws/soap_jdk
+    $ mkdir -p HelloService/src/main/java/org/example
     ```
 
 * 第二步：编写接口服务
 
-    编写HelloService.java接口服务，保存文件到HelloService/demo/ws/soap_jdk/HelloService.java
+    编写HelloService.java接口服务，保存文件到HelloService/src/main/java/org/example/HelloService.java
     ```java
-    package demo.ws.soap_jdk;
+    package org.example;
 
     import javax.jws.WebService;
 
@@ -32,16 +32,16 @@ keyword: web service cxf apache-cxf
 
 * 第三步：实现接口
 
-    实现服务接口，保存下面代码到HelloService/demo/ws/soap_jdk/HelloServiceImpl.java
+    实现服务接口，保存下面代码到HelloService/src/main/java/org/example/HelloServiceImpl.java
     ```java
-    package demo.ws.soap_jdk;
+    package org.example;
 
     import javax.jws.WebService;
 
     @WebService(
         serviceName = "HelloService",
         portName = "HelloServicePort",
-        endpointInterface = "demo.ws.soap_jdk.HelloService"
+        endpointInterface = "org.example.HelloService"
     )
     public class HelloServiceImpl implements HelloService {
         public String say(String name) {
@@ -52,9 +52,9 @@ keyword: web service cxf apache-cxf
 
 * 第四步：编写发布WebService的Server类
 
-    为发布web service，我们实现下面的Server类，保存代码到HelloService/demo/ws/soap_jdk/Server.java
+    为发布web service，我们实现下面的Server类，保存代码到HelloService/src/main/java/org/example/Server.java
     ```java
-    package demo.ws.soap_jdk;
+    package org.example;
 
     import javax.xml.ws.Endpoint;
 
@@ -71,32 +71,84 @@ keyword: web service cxf apache-cxf
 
 * 第五步：编译运行
 
-    在目录HelloService下，使用下面命令进行编译运行
+    在目录HelloService/src/main/java下，使用下面命令进行编译运行
     ```
-    javac demo/ws/soap_jdk/Server.java
-    java demo.ws.soap_jdk.Server
+    $ javac org/example/Server.java
+    $ java org.example.Server
     ```
     此时终端会输出`ws is published.`，然后打开浏览器输入网址
     [http://localhost:8080/ws/soap/hello?wsdl](http://localhost:8080/ws/soap/hello?wsdl)，
     就可以看到输出的xml文件内容；
 
-* 参考阅读链接
 
-    [https://my.oschina.net/huangyong/blog/286155](https://my.oschina.net/huangyong/blog/286155)
-
-
-通过动态代理类调用WS
+生成web service客户端，并在客户端调用WS
 ----
 
-先使用JDK发布web service，然后执行下面命令创建项目HelloServiceDynamicClient
-```
-$ mkdir -p HelloServiceDynamicClient/demo/ws/soap_jdk
-```
+* 第一步： 使用工具wsimport生成web service客户端代码
 
-* 第一步： 编写动态代理DynamicClient类调用WS
-    
+    先使用JDK发布web service，然后在信的窗口使用下面命令，生成WS客户端代码
+    ```
+    $ wsimport http://localhost:8080/ws/soap/hello?wsdl
+    ```
+    此时当前目录下就会生成一个org/example的目录，里面会有生成的class文件，通过下面命令进行jar包打包
+    ```
+    $ jar -cf client.jar org/
+    ```
+    然后就会有client.jar生成
+
+* 第二步：创建项目HelloServiceClient
+
+    使用下面命令创建项目目录
+    ```
+    $ mkdir HelloServiceClient/src/main/java/org/example
+    ```
+    把第一步中的client.jar拷贝到 HelloServiceClient/src/main/java 目录下;后面编译运行会使用;
+
+* 第三步： 添加客户端Client类
+
+    编写Client客户端类，保存代码到 HelloServiceClient/src/main/java/org/example/Client.java
     ```java
-    package demo.ws.soap_jdk;
+    package org.example;
+
+    public class Client {
+
+        public static void main(String[] args) {
+            HelloService_Service service = new HelloService_Service();
+
+            HelloService helloService = service.getHelloServicePort();
+            String result = helloService.say("world");
+            System.out.println(result);
+        }
+    }
+    ```
+
+* 第四步： 编译运行Client类
+
+    在目录HelloServiceClient/src/main/java下，使用下面命令进行编译Client类
+    ```
+    $ javac -classpath client.jar org/example/Client.java 
+    ```
+    再使用下面命令运行Client类
+    ```
+    $ java -classpath .:client.jar org.example.Client 
+    ```
+    对于java萌新来说，上面的.:client.jar的`.`千万不能省略，不然找不到Client类运行(ZZ)
+
+
+通过动态代理类调用web service
+----
+
+* 第一步： 创建项目HelloServiceDynamicClient
+
+    ```
+    $ mkdir -p HelloServiceDynamicClient/src/main/java/org/example
+    ```
+
+* 第二步： 编写动态代理DynamicClient类
+
+    保存下面代码到HelloServiceDynamicClient/src/main/java/org/example/DynamicClient.java
+    ```java
+    package org.example;
 
     import java.net.URL;
     import javax.xml.namespace.QName;
@@ -107,8 +159,8 @@ $ mkdir -p HelloServiceDynamicClient/demo/ws/soap_jdk
         public static void main(String[] args) {
             try {
                 URL wsdl = new URL("http://localhost:8080/ws/soap/hello?wsdl");
-                QName serviceName = new QName("http://soap_jdk.ws.demo/", "HelloService");
-                QName portName = new QName("http://soap_jdk.ws.demo/", "HelloServicePort");
+                QName serviceName = new QName("http://example.org/", "HelloService");
+                QName portName = new QName("http://example.org/", "HelloServicePort");
                 Service service = Service.create(wsdl, serviceName);
 
                 HelloService helloService = service.getPort(portName, HelloService.class);
@@ -120,15 +172,55 @@ $ mkdir -p HelloServiceDynamicClient/demo/ws/soap_jdk
         }
     }
     ```
+    这个动态代理类需要本地提供HelloService.java这个接口，直接拷贝HelloService项目里的HelloService.java到
+    HelloServiceDynamicClient/src/main/java/org/example/HelloService.java就可以；
 
-* 第二步： 编译运行
+* 第三步： 编译运行
 
-    文件保存到demo/ws/soap_jdk/DynamicClient.java，编译运行在项目HelloServiceDynamicClient目录下，执行
+    先使用JDK发布web service，然后在 HelloServiceDynamicClient/src/main/java/目录下执行下面命令编译运行
     ```
-    $ javac demo.ws.soap_jdk.DynamicClient.java
-    $ java demo.ws.soap_jdk.DynamicClient
+    $ javac org.example.DynamicClient.java
+    $ java org.example.DynamicClient
     ```
     可以看到下面的输出内容
     ```
     Hello, World
     ```
+
+
+项目目录结构参考
+----
+
+webservice
+|-- HelloService
+|   `-- src
+|       `-- main
+|           `-- java
+|               `-- org
+|                   `-- example
+|                       |-- HelloService.java
+|                       |-- HelloServiceImpl.java
+|                       `-- Server.java
+|
+|-- HelloServiceClient
+|   `-- src
+|       `-- main
+|           `-- java
+|               |-- client.jar
+|               `-- org
+|                   `-- example
+|                       `-- Client.java
+|
+|-- HelloServiceDynamicClient
+    `-- src
+        `-- main
+            `-- java
+                `-- org
+                    `-- example
+                        |-- DynamicClient.java
+                        `-- HelloService.java
+
+参考阅读链接
+----
+
+[https://my.oschina.net/huangyong/blog/286155](https://my.oschina.net/huangyong/blog/286155)
