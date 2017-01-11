@@ -84,8 +84,9 @@ keyword: web service
 生成web service客户端，并在客户端调用WS
 ----
 
-* 第一步： 使用工具wsimport生成web service客户端代码
+* 第一步： 生成web service客户端代码
 
+    java安装好后自带wsimport工具，可以使用这个命令来生成客户端代码；
     先使用JDK发布web service，然后在信的窗口使用下面命令，生成WS客户端代码
     ```
     $ wsimport http://localhost:8080/ws/soap/hello?wsdl
@@ -94,13 +95,13 @@ keyword: web service
     ```
     $ jar -cf client.jar org/
     ```
-    然后就会有client.jar生成
+    这样就成功生成client.jar文件，这个文件在客户端会需要使用；
 
 * 第二步：创建项目HelloServiceClient
 
     使用下面命令创建项目目录
     ```
-    $ mkdir HelloServiceClient/src/main/java/org/example
+    $ mkdir -p HelloServiceClient/src/main/java/org/example
     ```
     把第一步中的client.jar拷贝到 HelloServiceClient/src/main/java 目录下;后面编译运行会使用;
 
@@ -128,18 +129,22 @@ keyword: web service
     ```
     $ javac -classpath client.jar org/example/Client.java 
     ```
-    再使用下面命令运行Client类
+    编译成功后，使用下面命令运行Client类
     ```
     $ java -classpath .:client.jar org.example.Client 
     ```
-    对于java萌新来说，上面的.:client.jar的`.`千万不能省略，不然找不到Client类运行(ZZ)
-
+    对于java萌新来说，上面的.:client.jar的`.`千万不能省略，不然会找不到Client类运行(ZZ)，运行成功可以看到下面输出
+    ```
+    Hello， World
+    ```
+    
 
 通过动态代理类调用web service
 ----
 
 * 第一步： 创建项目HelloServiceDynamicClient
 
+    类似上面的创建项目命令，使用下面命令创建项目目录
     ```
     $ mkdir -p HelloServiceDynamicClient/src/main/java/org/example
     ```
@@ -175,7 +180,7 @@ keyword: web service
     这个动态代理类需要本地提供HelloService.java这个接口，直接拷贝HelloService项目里的HelloService.java到
     HelloServiceDynamicClient/src/main/java/org/example/HelloService.java就可以；
 
-* 第三步： 编译运行
+* 第三步： 编译运行DynamicClient类
 
     先使用JDK发布web service，然后在 HelloServiceDynamicClient/src/main/java/目录下执行下面命令编译运行
     ```
