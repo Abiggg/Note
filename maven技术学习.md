@@ -11,18 +11,19 @@ Maven是什么？
 
 * Maven介绍
 
-    maven是一个项目构建个管理的自动化工具，maven通过项目对象模型（POM，下面会介绍）来管理项目的构建;
+    maven是一个项目构建和管理的自动化工具，maven通过项目对象模型（POM，下面会介绍）来管理项目的构建;
+    
     wiki链接[https://en.wikipedia.org/wiki/Apache_Maven](https://en.wikipedia.org/wiki/Apache_Maven)
 
 * Maven项目的目录结构特征
 
-|              目录             |           用处            |
-| ----------------------------- | -------------------------|
-|          ${basedir}           | 存放pom.xml和所有的子目录  |
-|    ${basedir}/src/main/java   | 项目的java源代码目录       |
-| ${basedir}/src/main/resources | 项目的资源，比如property文件 |
-|    ${basedir}/src/test/java   | 项目测试类，比如JUnit代码    |
-| ${basedir}/src/test/resources | 测试使用的资源             |
+    |              目录             |           用处            |
+    | ----------------------------- | -------------------------|
+    |          ${basedir}           | 存放pom.xml和所有的子目录   |
+    |    ${basedir}/src/main/java   | 项目的java源代码目录        |
+    | ${basedir}/src/main/resources | 项目的资源，比如property文件 |
+    |    ${basedir}/src/test/java   | 项目测试类，比如JUnit代码    |
+    | ${basedir}/src/test/resources | 测试使用的资源              |
 
 
 Maven 环境安装与配置
