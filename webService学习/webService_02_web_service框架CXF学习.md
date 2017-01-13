@@ -91,7 +91,7 @@ CXF内置Jetty发布WS
 
     依次新建下面各个java类： Customer.java, Order.java, Product.java, CustomerService.java, Server.java
     
-    Customer.java
+    basic/src/main/java/demo/jaxrs/server/Customer.java
     ```java
     package demo.jaxrs.server;
     
@@ -121,7 +121,7 @@ CXF内置Jetty发布WS
     
     ```
     
-    Order.java
+    basic/src/main/java/demo/jaxrs/server/Order.java
     ```java
     package demo.jaxrs.server;
     
@@ -176,7 +176,7 @@ CXF内置Jetty发布WS
     }
     ```
     
-    Product.java
+    basic/src/main/java/demo/jaxrs/server/Product.java
     ```java
     package demo.jaxrs.server;
 
@@ -205,7 +205,7 @@ CXF内置Jetty发布WS
     }
     ```
     
-    CustomerService.java
+    basic/src/main/java/demo/jaxrs/server/CustomerService.java
     ```java
     package demo.jaxrs.server;
     
@@ -310,7 +310,7 @@ CXF内置Jetty发布WS
     }
     ```
     
-    Server.java
+    basic/src/main/java/demo/jaxrs/server/Server.java
     ```java
     package demo.jaxrs.server;
 
@@ -366,9 +366,92 @@ CXF内置Jetty发布WS
     ```
 
 * 第五步： Json支持
-* 第六步：
-* 参考链接：
-* 备注：
+
+    修改pom.xml,添加下面的Json依赖库
+    ```xml
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-jaxrs</artifactId>
+          <version>1.9.13</version>
+        </dependency>
+    ```
+
+    修改CustomerService.java，把
+    ```
+    @Produces("text/xml")
+    ```
+    修改成
+    ```
+    @Produces("application/json")
+    ```
+
+    修改Server.java文件，为JAXRSServerFactoryBean添加Provider，修改后代码如下
+    ```java
+    package demo.jaxrs.server;
+
+    import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+    import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
+
+    import org.codehaus.jackson.jaxrs.JacksonJsonProvider; // for JacksonJsonProvider
+
+    public class Server {
+
+        protected Server() throws Exception {
+            JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
+
+            // set response content-type to json
+            JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
+            sf.setProvider(jsonProvider);
+
+            sf.setResourceClasses(CustomerService.class);
+            sf.setResourceProvider(CustomerService.class, 
+                new SingletonResourceProvider(new CustomerService()));
+            sf.setAddress("http://localhost:9000/");
+
+            sf.create();
+        }
+
+        public static void main(String args[]) throws Exception {
+            new Server();
+            System.out.println("Server ready...");
+
+            Thread.sleep(5 * 6000 * 1000);
+            System.out.println("Server exiting");
+            System.exit(0);
+        }
+    }
+    ```
+    运行Server
+    ```
+    $ mvn clean -Pserver
+    ```
+    打开浏览器查看 http://localhost:9000/customerservice/customers/123 
+    ```
+    {"id":123,"name":"John"}
+    ```
+    终端输入下面命令
+    ```
+    $ curl -vH "Accepted: application/json" http://localhost:9000/customerservice/customers/123
+    ```
+    可看到下面输出
+    ```
+    *   Trying 127.0.0.1...
+    * Connected to localhost (127.0.0.1) port 9000 (#0)
+    > GET /customerservice/customers/123 HTTP/1.1
+    > Host: localhost:9000
+    > User-Agent: curl/7.47.0
+    > Accept: */*
+    > Accepted: application/json
+    > 
+    < HTTP/1.1 200 OK
+    < Date: Fri, 13 Jan 2017 10:05:20 GMT
+    < Content-Type: application/json
+    < Transfer-Encoding: chunked
+    < Server: Jetty(9.2.15.v20160210)
+    < 
+    * Connection #0 to host localhost left intact
+    {"id":123,"name":"John"}
+    ```
 
 CXF集成Spring发布WS
 ----
