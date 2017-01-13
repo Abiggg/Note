@@ -17,7 +17,8 @@ CXF是Apache的一个开源的WS（web service）框架，本身是整合了[Cel
 
 CXF内置Jetty发布WS
 ----
-以下介绍的例子是用apache-cxf的一个基础例子，详细可下载apache-cxf例子查看源代码
+以下介绍的例子是用apache-cxf的一个基础例子，详细可下载[apache-cxf](http://cxf.apache.org/download.html),
+在${apache-cxf-dir}/samples/jax_rs/basic目录下的例子查看源代码;
 
 * 第一步： 创建maven项目
 
@@ -367,7 +368,7 @@ CXF内置Jetty发布WS
 
 * 第五步： Json支持
 
-    修改pom.xml,添加下面的Json依赖库
+    首先，修改pom.xml,添加下面的Json依赖库
     ```xml
         <dependency>
           <groupId>org.codehaus.jackson</groupId>
@@ -376,7 +377,7 @@ CXF内置Jetty发布WS
         </dependency>
     ```
 
-    修改CustomerService.java，把
+    然后，修改CustomerService.java，把
     ```
     @Produces("text/xml")
     ```
@@ -385,7 +386,7 @@ CXF内置Jetty发布WS
     @Produces("application/json")
     ```
 
-    修改Server.java文件，为JAXRSServerFactoryBean添加Provider，修改后代码如下
+    最后，修改Server.java代码，为JAXRSServerFactoryBean添加Provider，修改后代码如下
     ```java
     package demo.jaxrs.server;
 
@@ -421,15 +422,12 @@ CXF内置Jetty发布WS
         }
     }
     ```
-    运行Server
-    ```
-    $ mvn clean -Pserver
-    ```
-    打开浏览器查看 http://localhost:9000/customerservice/customers/123 
+    使用命令`$ mvn clean -Pserver`运行Server，
+    打开浏览器输入地址 http://localhost:9000/customerservice/customers/123 ，下面是看到的内容
     ```
     {"id":123,"name":"John"}
     ```
-    终端输入下面命令
+    终端下可输入命令
     ```
     $ curl -vH "Accepted: application/json" http://localhost:9000/customerservice/customers/123
     ```
