@@ -288,10 +288,6 @@ Spring+Cxf发布restful web service
     ```
     打开浏览器输入 http://localhost:8080/product.html 即可看到页面;
 
-* 参考链接
-
-    [https://my.oschina.net/huangyong/blog/294324?](https://my.oschina.net/huangyong/blog/294324?)
-
 * 项目目录参考及源代码
 
     项目源代码： [https://github.com/zhushh/CodeForDestributedComputingCourse/tree/master/webservice/Spring_Cxf_example](https://github.com/zhushh/CodeForDestributedComputingCourse/tree/master/webservice/Spring_Cxf_example)
@@ -315,3 +311,7 @@ Spring+Cxf发布restful web service
     |               `-- web.xml
     `-- pom.xml
     ```
+
+* 参考链接
+
+    [https://my.oschina.net/huangyong/blog/294324?](https://my.oschina.net/huangyong/blog/294324?)
