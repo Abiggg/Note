@@ -365,6 +365,9 @@ CXF内置Jetty发布WS
     ```
     $ curl -v http://localhost:9000/customerservice/customers/123
     ```
+    
+    到这里基本上完成了使用apache-cxf的内置jetty发布web service了，不过目前的输出格式是xml的，现在很多web需要json的格式;
+    所以下面讲一下如何使我们刚刚发布的web service也支持json的格式;
 
 * 第五步： Json支持
 
@@ -451,5 +454,22 @@ CXF内置Jetty发布WS
     {"id":123,"name":"John"}
     ```
 
-CXF集成Spring发布WS
-----
+* 项目目录参考
+
+    源代码： [https://github.com/zhushh/CodeForDestributedComputingCourse/tree/master/webservice/basic](https://github.com/zhushh/CodeForDestributedComputingCourse/tree/master/webservice/basic)
+    ```
+    basic
+    |
+    |-- src
+    |   `-- main
+    |       `-- java
+    |           `-- demo
+    |               `-- jaxrs
+    |                   `-- server
+    |                       |-- Customer.java
+    |                       |-- CustomerService.java
+    |                       |-- Order.java
+    |                       |-- Product.java
+    |                       `-- Server.java
+    `-- pom.xml
+    ```
