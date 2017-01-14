@@ -191,8 +191,47 @@ Maven 常用命令
     mvn compile
     ```
     运行这个命令可以编译项目，编译过程按照pom.xml文件定义好的进行;
+    提醒一下，这里只是进行编译，而要运行maven项目的java代码，需要使用插件;而且不同的项目运行需要使用不同的插件;
+    
+* 运行项目
 
-* 运行测试
+    如果只是运行java的代码，那么使用 [maven-exec-plugin](http://www.mojohaus.org/exec-maven-plugin/usage.html) ;
+    
+    先配置pom.xml，添加下面的插件内容
+    ```xml
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2.1</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>java</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <mainClass>com.mycompany.app.App</mainClass>
+            <arguments>
+              <argument>foo</argument>
+              <argument>bar</argument>
+            </arguments>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
+    ```
+    主要需要配置的是`<mainClass>`和`<arguments>`，这两个分别表示运行的类和传进去的参数;其他的是插件信息;
+    
+    然后在命令行输入下面命令
+    ```
+    $ mvn exec:java -Dexec.mainClass="com.mycompany.app.App"
+    ```
+    就可以运行com/mycompany/app/App.java这个类了;
+    
+* 运行测试代码
 
     ```
     mvn test
