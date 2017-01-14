@@ -171,7 +171,7 @@ Maven 常用命令
 
     **-B**：
 
-        参数是指进行创建过程不需要交互（也就是不需要手动输入groupId、artifactId这些，而是使用指定）;
+        这个参数是指进行创建过程不需要交互（也就是不需要手动输入groupId、artifactId这些，而是使用指定）;
 
     **-DgroupId**：
         
@@ -230,6 +230,8 @@ Maven 常用命令
     $ mvn exec:java -Dexec.mainClass="com.mycompany.app.App"
     ```
     就可以运行com/mycompany/app/App.java这个类了;
+    还有其他比较复杂的配置运行，这个有需要的自己去查看例子或别的教程即可;
+    总的来说，这个pom.xml的配置信息其实挺容易看懂的;所以要看懂别人的例子也不难;
     
 * 运行测试代码
 
