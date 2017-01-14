@@ -76,11 +76,16 @@ Maven 环境安装与配置
 Maven 入门例子
 ----
 
+先通过运行一个简单的入门例子，待会后面会再解释一下命令;
+
 * 创建项目
 
     使用下面命令创建项目
     ```
-    $ mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+    $ mvn archetype:generate -DgroupId=com.mycompany.app \
+    -DartifactId=my-app \
+    -DarchetypeArtifactId=maven-archetype-quickstart \
+    -DinteractiveMode=false
     ```
     第一次运行需要等一会，因为maven会下载项目所需要的所有插件和依赖，
     然后你会看到在当前目录下会创建一个my-app的项目目录;`cd my-app`进入项目目录,目录结构如下：
@@ -101,19 +106,19 @@ Maven 入门例子
                         `-- app
                             `-- AppTest.java
     ```
-    src/main/java目录包含的是项目源代码
-    src/test/java目录包含的是项目的测试代码
-    pom.xml文件是Project Object Model（POM）
+    详细说明
 
-* POM介绍
+        src/main/java目录包含的是项目源代码
+        src/test/java目录包含的是项目的测试代码
+        pom.xml文件是Project Object Model（POM）
 
-    POM是工程对象模型，是指文件pom.xml，这个文件是maven项目配置的核心。包含了关于工程和各种配置细节的信息，Maven 使用这些信息构建工程。
+* 工程对象模型（POM）介绍
+
+    工程对象模型（POM），是指文件pom.xml，这个文件是maven项目配置的核心。包含了关于工程和各种配置细节的信息，Maven 使用这些信息构建工程。
     所有的项目都只有一个POM文件，文件需要包含groupId， artifactId， version三个信息;其中，
 
-        groupId：描述的是项目名称，由于有的项目并不是一个jar包构成的，而是由很多的jar包组成的。因此这个groupId就是整个项目的名称
-
+        groupId：描述的是项目名称
         artifactId:描述的是包的名称
-
         version:描述包的版本号
 
     详细信息参考[https://maven.apache.org/guides/introduction/introduction-to-the-pom.html](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html)和[https://maven.apache.org/pom.html](https://maven.apache.org/pom.html)
@@ -147,52 +152,76 @@ Maven 入门例子
     看到输出`Hello World`， 就说明成功运行第一个maven例子;
 
 * 参考教程
-[https://maven.apache.org/guides/getting-started/index.html#What_is_Maven](https://maven.apache.org/guides/getting-started/index.html#What_is_Maven)
+
+    [https://maven.apache.org/guides/getting-started/index.html#What_is_Maven](https://maven.apache.org/guides/getting-started/index.html#What_is_Maven)
 
 
 Maven 常用命令
 ----
 
-创建项目
-```
-mvn -B archetype:generate \ 
-    -DarchetypeGroupId=org.apache.maven.archetypes \
-    -DgroupId=com.mycompany.app \
-    -DartifactId=my-app
-```
--B：参数是指进行创建过程不需要交互（也就是不需要手动输入groupId、artifactId这些，而是使用指定）;
+* 创建项目
 
--DgroupId：这个参数是由两个构成，其中-D表示定义，-DgroupId就是定义groupId的意思，所以上面创建的groupId的值就是my-app;
+    ```
+    mvn -B archetype:generate \ 
+        -DarchetypeGroupId=org.apache.maven.archetypes \
+        -DarchetypeArtifactId=maven.archetype.webapp \
+        -DgroupId=com.mycompany.app \
+        -DartifactId=my-app
+    ```
 
-使用maven可以创建很多种应用，包括webapp、j2ee、maven插件、maven项目等，详细参考链接[https://maven.apache.org/guides/introduction/introduction-to-archetypes.html](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)
+    **-B**：
 
-编译项目
-```
-mvn compile
-```
+        参数是指进行创建过程不需要交互（也就是不需要手动输入groupId、artifactId这些，而是使用指定）;
 
-运行测试
-```
-mvn test
-```
+    **-DgroupId**：
+        
+        这个参数是由两个构成，其中-D表示定义的意思;
+        所以上面命令中：
+        -DarchetypeGroupId 表示定义archetypeGroupId
+        -DarchetypeArtifactId 表示定义archetypeArtifactId
+        -DgroupId 表示定义groupId
+        -DartifactId 表示定义artifactId
 
-打包项目
-```
-mvn package
-```
+    使用maven可以创建很多种应用，包括webapp、j2ee、maven插件、maven项目等，这些都可以通过定义archetypeGroupId和archetypeArtifactId来创建;
+    详细参考链接[https://maven.apache.org/guides/introduction/introduction-to-archetypes.html](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)
 
-安装项目
-```
-mvn install
-```
+* 编译项目
 
-其他命令参数
-```
-mvn site
-mvn clean
-mvn idea:idea
-mvn eclipse:eclipse
-```
+    ```
+    mvn compile
+    ```
+    运行这个命令可以编译项目，编译过程按照pom.xml文件定义好的进行;
+
+* 运行测试
+
+    ```
+    mvn test
+    ```
+    运行项目目录test里面的测试，一般也需要在pom.xml文件里面先进行配置;
+
+* 打包项目
+
+    ```
+    mvn package
+    ```
+    直接把编译好后的各个类等文件进行打包，打包的格式和资源也是在pom.xml里面定义;
+    所以你知道pom.xml文件的配置有多强大了吧;
+
+* 安装项目
+
+    ```
+    mvn install
+    ```
+    安装到本地，具体暂时不了解，有兴趣的可以去查看一下文档;
+
+* 其他命令参数
+
+    ```
+    mvn site
+    mvn clean
+    mvn idea:idea
+    mvn eclipse:eclipse
+    ```
 
 Maven创建标准Servlet程序过程
 ----
@@ -327,5 +356,5 @@ Maven创建标准Servlet程序过程
 
 * 备注
  
-    可以参考一个教程来创建servlet程序,链接是 [http://www.eclipse.org/jetty/documentation/current/maven-and-jetty.html](http://www.eclipse.org/jetty/documentation/current/maven-and-jetty.html)
+    可以参考另一个教程来创建servlet程序,链接是 [http://www.eclipse.org/jetty/documentation/current/maven-and-jetty.html](http://www.eclipse.org/jetty/documentation/current/maven-and-jetty.html)
 
