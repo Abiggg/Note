@@ -732,3 +732,44 @@ struct T {
     int b;
 };
 ```
+### 匿名结构体/联合体
+ 编译运行下面代码
+```c++
+#include <stdio.h>
+#include <stdlib.h>
+
+struct T {
+    int type;
+    int size;
+
+    /* 匿名联合体，`ch`和`value`就相当于是`struct T`的成员变量 */
+    union {
+        char ch;
+        int value;
+    };
+
+    /* 类似于匿名联合体， `struct T`可以直接省略结构体的名称使用`one`和`two` */
+    struct {
+        struct T* one;
+        struct T* two;
+    };
+};
+
+int main(int argc, char const *argv[])
+{
+    struct T a = {1, 3, 12};
+    struct T b = {2, 2, 'a'};
+    struct T c = {3, 1, 4, &a, &b};
+
+    printf("%3d %3d %4d\n", a.type, a.size, a.value);
+    printf("%3d %3d %4c\n", b.type, b.size, b.ch);
+    printf("%3d %3d %4d %4d\n", c.type, c.size, (c.one)->type, (c.two)->type);
+    return 0;
+}
+```
+输出如下
+```
+  1   3   12
+  2   2    a
+  3   1    1    2
+```
