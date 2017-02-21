@@ -312,7 +312,7 @@ public String girlFriend(@PathParam("username") String userName,
 ----
 
 `@Context`是注入上下文信息的注解，可以用来获取：Application，UriInfo，Request, HttpHeaders, SecurityContext, Providers等信息；
-详细请阅读文档： [](http://download.oracle.com/otn-pub/jcp/jaxrs-2_0_rev_A-mrel-eval-spec/jsr339-jaxrs-2.0-final-spec.pdf?AuthParam=1487667458_ddc56bd853cf1725c656dc14387496b8)
+详细请阅读文档： [JAX-RS文档说明](http://download.oracle.com/otn-pub/jcp/jaxrs-2_0_rev_A-mrel-eval-spec/jsr339-jaxrs-2.0-final-spec.pdf?AuthParam=1487667458_ddc56bd853cf1725c656dc14387496b8)
 
 
 注入规则(Rules of Injection)
