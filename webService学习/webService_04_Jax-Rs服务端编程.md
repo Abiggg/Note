@@ -318,10 +318,6 @@ public String girlFriend(@PathParam("username") String userName,
 注入规则(Rules of Injection)
 ----
 
-* @Context
-
-    `@Context`注解用于注入上下文信息，包括：Application，UriInfo，Request，HttpHeaders，SecurityContext，Providers等；
-
 * 注入规则的通常用法
 
     注入可以被作用于类成员变量、构造函数参数、资源类/子资源类/子资源定位器方法参数和bean的setter方法；看下面例子：
