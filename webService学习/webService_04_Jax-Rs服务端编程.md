@@ -17,9 +17,10 @@ keyword: cxf jax-rs
 * 参数注解(@*Param)
 * 子资源
 * 根资源的生命周期
+* @Context
 * 注入规则
-* @Context的使用
-* 可编程的资源对象
+* 参考链接
+
 
 根资源类(Root Resources Classes)
 ----
@@ -222,26 +223,232 @@ public String girlFriend(@PathParam("username") String userName,
 子资源(Sub-resources)
 ----
 
+* 子资源方法
+
+    `@Path`注解可以作用在类上面，同时还可以用在方法上，这时候这个方法就是子资源方法；我们可以看下面这个例子：
+    ```java
+    @Singleton
+    @Path("/printers")
+    public class PrintersResource {
+     
+        @GET
+        @Produces({"application/json", "application/xml"})
+        public WebResourceList getMyResources() { ... }
+     
+        @GET @Path("/list")
+        @Produces({"application/json", "application/xml"})
+        public WebResourceList getListOfPrinters() { ... }
+     
+        @GET @Path("/jMakiTable")
+        @Produces("application/json")
+        public PrinterTableModel getTable() { ... }
+     
+        @GET @Path("/jMakiTree")
+        @Produces("application/json")
+        public TreeModel getTree() { ... }
+     
+        @GET @Path("/ids/{printerid}")
+        @Produces({"application/json", "application/xml"})
+        public Printer getPrinter(@PathParam("printerid") String printerId) { ... }
+     
+        @PUT @Path("/ids/{printerid}")
+        @Consumes({"application/json", "application/xml"})
+        public void putPrinter(@PathParam("printerid") String printerId, Printer printer) { ... }
+     
+        @DELETE @Path("/ids/{printerid}")
+        public void deletePrinter(@PathParam("printerid") String printerId) { ... }
+    }
+    ```
+
+* 子资源定位器
+
+    如果`@Path`是被用在没有被`@GET`或`@POST`等注解上的方法的资源方法，那么这个方法就是子资源定位器，看下面例子：
+    ```java
+    @Path("/item")
+    public class ItemResource {
+        @Context UriInfo uriInfo;
+     
+        @Path("content")
+        public ItemContentResource getItemContentResource() {
+            return new ItemContentResource();
+        }
+     
+        @GET
+        @Produces("application/xml")
+            public Item get() { ... }
+        }
+    }
+     
+    public class ItemContentResource {
+     
+        @GET
+        public Response get() { ... }
+     
+        @PUT
+        @Path("{version}")
+        public void put(@PathParam("version") int version,
+                        @Context HttpHeaders headers,
+                        byte[] in) {
+            ...
+        }
+    }
+    ```
+    ItemResource类包含有子资源定位器方法`getItemContentResource`,用来返回一个新的资源类；
+
 
 根资源的生命周期(Life-cycle of Root Resources Classes)
 ----
+
+根资源的生命周期分为三种： Request scope，Per-lookup scope， Singleton；
+
+|     Scope        | Annotation     | Description |
+|------------------|----------------|-------------|
+| Request scope    | @RequestScoped | 默认的生命周期，每个请求都会创建新的用来处理请求，在同一个请求中可重复使用 |
+| Per-lookup scope | @PerLookup     | 每当需要使用这个类时就会创建一个实例，即使在同一个请求中也是 |
+| Singleton        | @Singleton     | 在jar-rs应用中，这个类的实例只会被创建一次 |
+
+
+@Context
+----
+
+`@Context`是注入上下文信息的注解，可以用来获取：Application，UriInfo，Request, HttpHeaders, SecurityContext, Providers等信息；
+详细请阅读文档： [](http://download.oracle.com/otn-pub/jcp/jaxrs-2_0_rev_A-mrel-eval-spec/jsr339-jaxrs-2.0-final-spec.pdf?AuthParam=1487667458_ddc56bd853cf1725c656dc14387496b8)
 
 
 注入规则(Rules of Injection)
 ----
 
+* @Context
 
-@Context的使用
-----
+    `@Context`注解用于注入上下文信息，包括：Application，UriInfo，Request，HttpHeaders，SecurityContext，Providers等；
 
+* 注入规则的通常用法
 
-可编程资源对象(Programmatic resource model)
-----
+    注入可以被作用于类成员变量、构造函数参数、资源类/子资源类/子资源定位器方法参数和bean的setter方法；看下面例子：
+    ```java
+    @Path("{id:\\d+}")
+    public class InjectedResource {
+        // Injection onto field
+        @DefaultValue("q") @QueryParam("p")
+        private String p;
+     
+        // Injection onto constructor parameter
+        public InjectedResource(@PathParam("id") int id) { ... }
+     
+        // Injection onto resource method parameter
+        @GET
+        public String get(@Context UriInfo ui) { ... }
+     
+        // Injection onto sub-resource resource method parameter
+        @Path("sub-id")
+        @GET
+        public String get(@PathParam("sub-id") String id) { ... }
+     
+        // Injection onto sub-resource locator method parameter
+        @Path("sub-id")
+        public SubResource getSubResource(@PathParam("sub-id") String id) { ... }
+     
+        // Injection using bean setter method
+        @HeaderParam("X-header")
+        public void setHeader(String header) { ... }
+    }
+    ```
+
+* 注入规则在Singleton类型的限制
+
+    对于Singleton类型的资源类，类的作用域内的变量和构造函数参数不能被注入；例如：
+    ```java
+    @Path("resource")
+    @Singleton
+    public static class MySingletonResource {
+     
+        @QueryParam("query")
+        String param; // WRONG: initialization of application will fail as you cannot
+                      // inject request specific parameters into a singleton resource.
+     
+        @GET
+        public String get() {
+            return "query param: " + param;
+        }
+    }
+    ```
+    上面的代码是不被允许的，不过我们可以使用`@Context`来进行注入；例如：
+    ```java
+    @Path("resource")
+    @Singleton
+    public static class MySingletonResource {
+        @Context
+        Request request; // this is ok: the proxy of Request will be injected into this singleton
+     
+        public MySingletonResource(@Context SecurityContext securityContext) {
+            // this is ok too: the proxy of SecurityContext will be injected
+        }
+     
+        @GET
+        public String get() {
+            return "query param: " + param;
+        }
+    }
+    ```
+
+* 注入规则的汇总
+
+    | Java construct         | Description  |
+    |------------------------|--------------|
+    | Class field            | 直接注入到变量中，变量类型可以是private，但不能是final；注意Singleton类型 |
+    | Constructor parameters | 调用构造函数，最大匹配的被调用， 注意Singleton类型 |
+    | Resource methods       | 当方法被调用的时候可以注入变量，可以用在任何类型 |
+    | Sub resources locators | 当子资源定位器被调用的时候，可以注入变量，可以用在任何类型 |
+    | Setter methods         | 通过setter方法来注入变量值，只能被使用在@Context注解上 |
+
+    下面是一个注入的例子，包含所有可以被注入的情况：
+    ```java
+    @Path("resource")
+    public static class SummaryOfInjectionsResource {
+        @QueryParam("query")
+        String param; // injection into a class field
+     
+     
+        @GET
+        public String get(@QueryParam("query") String methodQueryParam) {
+            // injection into a resource method parameter
+            return "query param: " + param;
+        }
+     
+        @Path("sub-resource-locator")
+        public Class<SubResource> subResourceLocator(@QueryParam("query") String subResourceQueryParam) {
+            // injection into a sub resource locator parameter
+            return SubResource.class;
+        }
+     
+        public SummaryOfInjectionsResource(@QueryParam("query") String constructorQueryParam) {
+            // injection into a constructor parameter
+        }
+     
+     
+        @Context
+        public void setRequest(Request request) {
+            // injection into a setter method
+            System.out.println(request != null);
+        }
+    }
+     
+    public static class SubResource {
+        @GET
+        public String get() {
+            return "sub resource";
+        }
+    }
+    ```
 
 
 参考链接
 ----
 
+* [JAX-RS文档](http://download.oracle.com/otn-pub/jcp/jaxrs-2_0_rev_A-mrel-eval-spec/jsr339-jaxrs-2.0-final-spec.pdf?AuthParam=1487667458_ddc56bd853cf1725c656dc14387496b8)
+
 * [https://jersey.java.net/documentation/latest/jaxrs-resources.html](https://jersey.java.net/documentation/latest/jaxrs-resources.html)
 
 * [http://ss.sysu.edu.cn/~pml/webservices/5-jax-rs-std.html](http://ss.sysu.edu.cn/~pml/webservices/5-jax-rs-std.html)
+
+* [http://docs.jboss.org/resteasy/docs/3.0.6.Final/userguide/html_single/index.html#_Context](http://docs.jboss.org/resteasy/docs/3.0.6.Final/userguide/html_single/index.html#_Context)
