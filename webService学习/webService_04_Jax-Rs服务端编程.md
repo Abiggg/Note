@@ -445,7 +445,7 @@ public String girlFriend(@PathParam("username") String userName,
 参考链接
 ----
 
-* [JAX-RS文档](http://download.oracle.com/otn-pub/jcp/jaxrs-2_0_rev_A-mrel-eval-spec/jsr339-jaxrs-2.0-final-spec.pdf?AuthParam=1487667458_ddc56bd853cf1725c656dc14387496b8)
+* [JAX-RS文档](http://download.oracle.com/otn-pub/jcp/jaxrs-2_0_rev_A-mrel-eval-spec/jsr339-jaxrs-2.0-final-spec.pdf?AuthParam=1487667458_ddc56bd853cf1725c656dc14387496b8)（如果想要学习深一点，建议直接阅读这个文档）
 
 * [https://jersey.java.net/documentation/latest/jaxrs-resources.html](https://jersey.java.net/documentation/latest/jaxrs-resources.html)
 
