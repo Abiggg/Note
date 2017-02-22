@@ -311,6 +311,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
 
 * [JAX-RS文档](http://download.oracle.com/otn-pub/jcp/jaxrs-2_0_rev_A-mrel-eval-spec/jsr339-jaxrs-2.0-final-spec.pdf?AuthParam=1487667458_ddc56bd853cf1725c656dc14387496b8)
 
-* [函数式 web 服务的 Client API](https://jersey.java.net/documentation/latest/client.html)
-
 * [JAX-RS所有的类](https://jersey.java.net/apidocs-javax.jax-rs/2.0.1/allclasses-noframe.html)
+
+* [Jersey客户端的 Client API](https://jersey.java.net/documentation/latest/client.html)
+
