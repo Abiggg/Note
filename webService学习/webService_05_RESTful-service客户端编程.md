@@ -39,10 +39,12 @@ Java访问web服务/应用的原理
         (1) 简单，架构容易理解和维护
         (2) 解耦，随着时间的演变，客户端和服务可以保持向后兼容
     另外需要更多的限制：
+    
         (1) 每一个资源都具有一个URI
         (2) 客户端通过HTTP请求和响应，使用特定的HTTP方法获取资源
         (3) 通过指定媒体类型，可以返回一种或者多种格式的表示
         (4) 内容可以链接到其他的资源
+        
     在JAX-RS client API里，资源是一个封装有URI的`WebTarget`类；这个类可以调用一组基于`WebTarget`的特定
     的HTTP方法；
 
@@ -66,8 +68,8 @@ Java访问web服务/应用的原理
 
 * Client API简介
     
-    * 开始使用Client API 
-    * 创建和配置Client实例
+    (1) 开始使用Client API 
+    (2) 创建和配置Client实例
 
         最简单的创建方式如下：
         ```java
@@ -105,7 +107,7 @@ Java访问web服务/应用的原理
         Configuration newConfiguration = client.getConfiguration();
         ```
 
-    * 定位web resource
+    (3) 定位web resource
 
         有了Client实例，我们就可以用它创建`WebTarget`：
         ```java
@@ -118,7 +120,7 @@ Java访问web服务/应用的原理
         webTarget.register(FilterForExampleCom.class);
         ```
 
-    * 在WebTarget上识别资源
+    (4) 在WebTarget上识别资源
 
         WebTarget可以通过`path`方法派生出其他的 WebTarget 资源：
         ```java
@@ -137,7 +139,7 @@ Java访问web服务/应用的原理
             helloWorldWebTarget.queryParam("greeting", "Hi World!");
         ```
 
-    * 调用Http请求
+    (5) 调用Http请求
 
         Client API里面提供了Invocation，这是一个接口，可以用来创建调用，然后再提交调用进行执行；
         也就是说请求调用这个过程分成了两步： 创建一个Invocation和提交Invocation；Invocation可以通过
@@ -164,7 +166,7 @@ Java访问web服务/应用的原理
                 .post(Entity.entity("A string entity to be POSTed", MediaType.TEXT_PLAIN_TYPE));
         ```
 
-    * 例子总结
+    (6) 例子总结
 
         把上面例子的所有代码总结起来就是下面这样：
         ```java
