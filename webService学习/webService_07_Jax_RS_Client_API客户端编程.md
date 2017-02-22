@@ -298,7 +298,7 @@ Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
 ```
 
 
-* 代码例子
+代码例子
 ----
 
 [项目地址](https://github.com/zhushh/CodeForDestributedComputingCourse/tree/master/course_07/02)
