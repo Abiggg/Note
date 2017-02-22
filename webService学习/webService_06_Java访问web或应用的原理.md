@@ -16,5 +16,5 @@ Java访问web服务/应用的原理
 
     * [Apache HttpClient教程](https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-tutorial.pdf)
 
-    * [Apache HttpCore教程](http://www.cnblogs.com/loveyakamoz/category/311258.html)
+    * [Apache HttpCore教程](http://hc.apache.org/httpcomponents-core-ga/tutorial/pdf/httpcore-tutorial.pdf)
 
