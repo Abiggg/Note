@@ -70,9 +70,16 @@ if (!ff.isDone()) {
 实时交互客户端(Reactive Client)扩展的目的
 ----
 
+实时交互编程可以更方便的开发异步编程;它是基于数据流和变化传播的;
+
+而且使用实时交互的方法,也使得代码更容易去维护,编写和阅读;
+
+参看例子: [Reactive Jersey Client, Part 1 – Motivation](https://blog.dejavu.sk/2015/01/07/reactive-jersey-client-part-1-motivation/)
+
 
 实时交互客户端API的用法
 ----
+
 交互式客户端API提供了跟JAX-RS的客户端API相似的API接口,它是基于现有的JAX-APIs的一些扩展;
 
 HTTP请求的同步调用如下:
