@@ -72,7 +72,7 @@ Java Annotation
 
     使用@interface来声明自己的注解,例如下面这个例子:
     
-    声明annotation:
+    声明自己的注解TypeHeader:
     ```java
     import java.lang.annotation.Retention
     import java.lang.annotation.RetentionPolicy;
@@ -85,7 +85,7 @@ Java Annotation
         int meaningOfLife();
     }
     ```
-    在类声明中使用annotation:
+    在类声明中使用注解:
     ```java
     @TypeHeader(developer = "Bob bee",
         lastModified = "2013-02-12",
@@ -95,7 +95,7 @@ Java Annotation
         // class contents go here
     }
     ```
-    获取Annotation的信息:
+    获取注解(Annotation)的信息:
     ```java
     // This is the example code that processes the annotation
     import java.lang.annotation.Annotation;
@@ -136,6 +136,6 @@ Java Annotation
     
 * **参考链接**
 
-[Java annotation - wiki](https://en.wikipedia.org/wiki/Java_annotation)
+   [Java annotation - wiki](https://en.wikipedia.org/wiki/Java_annotation)
 
-[Java注解基础理解](http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html)
+   [Java注解基础理解](http://www.cnblogs.com/mandroid/archive/2011/07/18/2109829.html)
