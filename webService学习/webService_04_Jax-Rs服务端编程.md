@@ -5,7 +5,7 @@ update: Fri 13 Jan 2017 01:38:22 PM CST
 keyword: cxf jax-rs
 ---
 
-目录
+JAX-RS服务端编程目录
 ----
 * 根资源类
 
