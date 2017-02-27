@@ -6,7 +6,7 @@ keyword:
 ---
 
 
-目录
+JAX-RS Client API客户端编程目录
 ----
 
 * 统一接口限制
