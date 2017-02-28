@@ -47,7 +47,7 @@ Docker基础命令
     Status: Downloaded  newer   image   for ubuntu:14.04
     ```
 
-* **运行**
+* **操作容器**
 
     有了镜像后,就可以使用`docker run`命令运行;以上面ubuntu:14.04为例:
     ```
