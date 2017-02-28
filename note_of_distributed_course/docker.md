@@ -87,6 +87,57 @@ Docker基础命令
     
     `-p 81:80`: 81是指当前系统端口,80是指nginx镜像的端口,也就是把81端口映射到镜像的80端口;然后就可以通过浏览器localhost:81访问nginx服务;
     
+    
+    **列出所有的容器**
+    ```
+    $ docker ps -a
+    ```
+    
+    **列出正在运行的容器**
+    ```
+    $ docker ps
+    ```
+
+    **停止正在运行的容器**
+    ```
+    $ docker stop <container-name>
+    ```
+    例如,停止上面的webservice容器就是:
+    ```
+    $ docker stop webservice
+    ```
+    
+    **启动已终止的容器**    
+    ```
+    $ docker start <container-name>
+    ```
+    例如,如果上面的webservice容器被停止了,那么浏览器就无法访问http://localhost地址,现在重启webservice容器:
+    ```
+    $ docker start webservice
+    ```
+    
+    **进入容器**
+    ```
+    $ docker attach <container-name>
+    ```
+    例如,先启动一个后台运行的ubuntu:
+    ```
+    $ docker run -idt ubuntu:14.04
+    ```
+    然后,我们可以使用`docker ps`查看一下它的容器名:
+    ```
+    $ docker ps
+    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                         NAMES
+    61bc61919df0        ubuntu:14.04        "/bin/bash"              5 seconds ago       Up 4 seconds                                      objective_raman
+    960c831d71eb        nginx               "nginx -g 'daemon ..."   2 hours ago         Up 5 minutes        0.0.0.0:80->80/tcp, 443/tcp   webservice
+    ```
+    上面的`objective_raman`容器名就是刚刚创建的(你的可能跟我展示的不一样);然后在使用`docker attach`命令进入容器:
+    ```
+    $ docker attach objective_raman
+    root@61bc61919df0:/#
+    ```
+    这样就进去容器了;
+    
 * **列出镜像**
  
     想要列出已经下载下来的镜像,可以使用`docker images`命令:
