@@ -6,7 +6,6 @@ keywords:
 ---
 
 
-
 Docker简介
 ----
 * **镜像**
@@ -26,3 +25,20 @@ Docker基础命令
 ----
 * **获取镜像**
 
+  从Docker Register获取镜像的命令是`docker pull`,命令格式为:
+  ```
+  docker pull [选项] [Docker Register地址]<仓库名>:<标签>
+  ```
+  使用`docker pull --help`可以查看详细命令信息,下面是获取ubuntu 14.04的例子:
+  ```
+  $ docker pull ubuntu:14.04
+    14.04:  Pulling from    library/ubuntu
+    bf5d46315322:   Pull    complete
+    9f13e0ac480c:   Pull    complete
+    e8988b5b3097:   Pull    complete
+    40af181810e7:   Pull    complete
+    e6f7c7e5c03e:   Pull    complete
+    Digest: sha256:147913621d9cdea08853f6ba9116c2e27a3ceffecf3b49298
+    3ae97c3d643fbbe
+    Status: Downloaded  newer   image   for ubuntu:14.04
+  ```
