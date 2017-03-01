@@ -1,8 +1,8 @@
 ---
 name: docker.md
-date:
-update:
-keywords:
+date: 2017-02-28
+update: 2017-03-01
+keywords: docker
 ---
 
 
@@ -23,6 +23,13 @@ Docker简介
 
 Docker基础命令
 ----
+
+在学习下面的命令之前,我们需要先明白Docker在运行时分为Docker引擎(也就是服务器守护进程)和客户端工具;
+Docker的引擎提供了一组REST API,被称为[Docker Remote API](https://docs.docker.com/engine/api/),
+而`docker`命令是客户端工具,它通过这组API与Docker引擎交互,从而完成各种功能;因此,表面上我们在执行
+docker的各种功能,但实际上一切都是使用远程调用形式在服务器端(Docker引擎)完成;正是因为这种C/S设计,
+让我们操作远程服务器的Docker引擎变得轻而易举;
+
 * **获取镜像**
 
     从Docker Register获取镜像的命令是`docker pull`,命令格式为:
@@ -49,6 +56,8 @@ Docker基础命令
 
 * **操作容器**
 
+    **运行容器**
+    
     有了镜像后,就可以使用`docker run`命令运行;以上面ubuntu:14.04为例:
     ```
     $ docker run -it --rm ubuntu:14.04 bash
@@ -75,18 +84,54 @@ Docker基础命令
     
     运行容器后,我们便在镜像中启动了bash命令,然后输入了`cat /etc/os-release`和`exit`两个命令;
 
+    **后台运行容器**
+    
     另外,如果我们想启动某一服务的容器时,可以像这样执行:
     ```
     $ docker run --name webservice -d -p 81:80 nginx
     ```
-    这条命令是指，用ｎｇｉｎｘ镜像运行一个容器，容器命名为ｗｅｂｓｅｒｖｉｃｅ，并且映射８０端口，这样我们就可以使用浏览器去访问这个ｎｇｉｎｘ服务器；
+    这条命令是指，用ｎｇｉｎｘ镜像运行一个容器，容器命名为ｗｅｂｓｅｒｖｉｃｅ，并且映射主机８1端口到镜像的80端口，在浏览器输入 http://localhost 地址就可以访问到nginx服务器；
     
     `--name webservice`: 命名容器为webservice;
     
     `-d`: 后台运行;
     
-    `-p 81:80`: 81是指当前系统端口,80是指nginx镜像的端口,也就是把81端口映射到镜像的80端口;然后就可以通过浏览器localhost:81访问nginx服务;
+    `-p 81:80`: 81是当前主机端口,80是镜像的端口,也就是把主机81端口映射到镜像的80端口;
     
+    **进入容器**
+    
+    上面启动的webservice容器我们是在后台运行的,现在想进去修改nginx的欢迎界面html;那么可以使用`docker exec`命令进入:
+    ```
+    $ docker exec -it webservice bash
+    root@f649e877c035:/# echo '<h1>Hello, Docker</h1>' > /usr/share/nginx/html/index.html 
+    root@f649e877c035:/# exit                 
+    exit
+    ```
+    上面命令中,`docker exec`的参数`-it`是终端交互参数(因为我们要执行bash命令),webservice是容器名,bash是执行的命令;
+    之后我们就进入到webservice容器中,执行了`echo`命令重定向输出到`/usr/share/nginx/html/index.html`文件中;
+    现在打开浏览器 http://localhost/ 看到的内容就是`Hello, Docker`;
+    
+    我们也可以使用下面方式进入容器中:
+    ```
+    $ docker attach <container-name>
+    ```
+    例如,先启动一个后台运行的ubuntu:
+    ```
+    $ docker run -idt ubuntu:14.04
+    ```
+    然后,我们可以使用`docker ps`查看一下它的容器名:
+    ```
+    $ docker ps
+    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                         NAMES
+    61bc61919df0        ubuntu:14.04        "/bin/bash"              5 seconds ago       Up 4 seconds                                      objective_raman
+    960c831d71eb        nginx               "nginx -g 'daemon ..."   2 hours ago         Up 5 minutes        0.0.0.0:80->80/tcp, 443/tcp   webservice
+    ```
+    上面的`objective_raman`容器名就是刚刚创建的(你的可能跟我展示的不一样);然后在使用`docker attach`命令进入容器:
+    ```
+    $ docker attach objective_raman
+    root@61bc61919df0:/#
+    ```
+    这样就进去容器了;
     
     **列出所有的容器**
     ```
@@ -115,28 +160,6 @@ Docker基础命令
     ```
     $ docker start webservice
     ```
-    
-    **进入容器**
-    ```
-    $ docker attach <container-name>
-    ```
-    例如,先启动一个后台运行的ubuntu:
-    ```
-    $ docker run -idt ubuntu:14.04
-    ```
-    然后,我们可以使用`docker ps`查看一下它的容器名:
-    ```
-    $ docker ps
-    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                         NAMES
-    61bc61919df0        ubuntu:14.04        "/bin/bash"              5 seconds ago       Up 4 seconds                                      objective_raman
-    960c831d71eb        nginx               "nginx -g 'daemon ..."   2 hours ago         Up 5 minutes        0.0.0.0:80->80/tcp, 443/tcp   webservice
-    ```
-    上面的`objective_raman`容器名就是刚刚创建的(你的可能跟我展示的不一样);然后在使用`docker attach`命令进入容器:
-    ```
-    $ docker attach objective_raman
-    root@61bc61919df0:/#
-    ```
-    这样就进去容器了;
     
     **删除容器**
     ```
