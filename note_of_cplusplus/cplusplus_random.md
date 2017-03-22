@@ -32,15 +32,16 @@ std::mt19937 rng;
 rng.seed(std::random_device()());
 ```
 
-表示创建一个均匀分布，这个均匀分布可以等概率（随机）生成[1, 6]区间的整形数字；
+创建一个均匀分布，这个均匀分布可以等概率（随机）生成[1, 6]区间的整形数字；
 ```c++
 std::uniform_int_distribution<std::mt19937::result_type> dist6(1, 6);
-```也可以直接写成
+```
+也可以直接写成
 ```c++
 std::uniform_int_distribution<int> dist6(1, 6);
 ```
 
-表示创建一个均匀分布，随机（等概率）生成在（-1， 1）之间的小数；
+创建一个均匀分布，随机（等概率）生成在（-1， 1）之间的小数；
 ```c++
 std::uniform_real_distribution<double> distribution(-1, 1);
 ```
