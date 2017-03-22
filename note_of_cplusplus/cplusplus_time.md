@@ -46,7 +46,7 @@ int main() {
     time_t rawtime;
     struct tm *timeinfo;
     time(&rawtime);     // same as rawtime = time(NULL);
-    timeinfo = localtime(rawtime);
+    timeinfo = localtime(&rawtime);
     printf("Current time and date: %s\n", asctime(timeinfo));
 }
 ```
