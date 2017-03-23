@@ -90,4 +90,5 @@ $
 ----
 * [select网络编程例子](https://github.com/zhushh/cplusplus/tree/master/network_programming/select)
 * [select main page](http://www.mkssoftware.com/docs/man3/select.3.asp)
+* [Beej's Guide to Network programming](http://beej.us/guide/bgnet/output/html/multipage/index.html)
 * [Linux IO模式及 select、poll、epoll详解](https://segmentfault.com/a/1190000003063859)
