@@ -1,3 +1,11 @@
+---
+name: kvm相关技术.md
+date: 2017-04-02
+update: 2017-04-02
+keywords: kvm libvirt ubuntu 虚拟机 虚拟机技术
+---
+
+
 什么是KVM？
 ----
 
@@ -64,9 +72,81 @@ Ubuntu安装KVM
     $
     ```
 
+* 虚拟机管理
+
+    1.列出正在运行的虚拟机
+    ```
+    $ virsh list
+    ```
+    2.启动一个虚拟机
+    ```
+    $ virsh start web_devel
+    ```
+    3.在启动时开始一个虚拟机
+    ```
+    $ virsh autostart web_devel
+    ```
+    4.重启一个虚拟机
+    ```
+    $ virsh reboot web_devel
+    ```
+    5.将虚拟机的状态保存到文件中，一旦保存虚拟机将不再运行
+    ```
+    $ virsh save web_devel-170408.state
+    ```
+    6.唤醒经过保存的虚拟机
+    ```
+    $ virsh restore web_devel-170408.state
+    ```
+    7.关闭虚拟机
+    ```
+    $ virsh shutdown web_devel
+    ```
+    8.把CDROM设备挂载到虚拟机上面
+    ```
+    $ virsh attach-disk web_devel /dev/cdrom /media/cdrom
+    ```
+
+
+* 虚拟机管理器
+
+    如果想要使用桌面环境，那么需要先安装virt-manager，virt-manager包含有一组图形化的程序用以管理本地和远程的虚拟机，
+    输入下面命令进行安装virt-manager:
+    ```
+    $ sudo apt-get install virt-manager
+    ```
+    链接到本地libvirt服务：
+    ```
+    $ virt-manager -c qemu:///system
+    ```
+    如果想要链接到另一台计算机上面的libvirt服务，可以使用下面的命令：
+    ```
+    $ virt-manager -c qemu+ssh://virtnode1.mydomain.com/system
+    ```
+    上面的命令是假设你已经设置好ssh管理和virtnode1.domain.com的连通，更多细节设置参看[OpenSSH服务器](https://help.ubuntu.com/lts/serverguide/openssh-server.html)
+
+
+* 虚拟机查看器
+
+    virt-viewer程序可以链接到虚拟机，运行virt-viewer需要虚拟机支持图形界面；
+    安装virt-viewer命令：
+    ```
+    $ sudo apt-get install virt-viewer
+    ```
+    运行虚拟机后，使用下面命令到控制台：
+    ```
+    $ virt-viewer web_devel
+    ```
+    和virt-manager相似，virt-viewer也可以通过授权ssh远程链接到远方主机:
+    ```
+    $ virt-viewer -c qemu+ssh://virtnode1.mydomain.com/system web_devel
+    ```
+
 * 参考链接
 
     [KVM installation - ubuntu help](https://help.ubuntu.com/community/KVM/Installation)
+
+    [libvirt - ubuntu help](https://help.ubuntu.com/lts/serverguide/libvirt.html)
 
 
 了解QEMU
@@ -86,46 +166,3 @@ Virtual Network Computing（VNC）是一个远程系统，允许你和网络上�
 ```
 下载网址[https://github.com/TigerVNC/tigervnc/releases](https://github.com/TigerVNC/tigervnc/releases)
 
-
-
-什么是xrdp？
-----
-
-```
-xrdp一个开源的远程桌面协议服务器， 使用远程桌面协议来向用户展示图形界面；
-```
-
-安装xrdp
-----
-
-- 创建xrdp下载软件仓库
-    ```
-    $ sudo touch /etc/yum.repos.d/xrdp.repo
-    ```
-
-- 在该仓库文件中添加如下内容
-    ```
-    [xrdp]
-    name = xrdp
-    baseurl = http://li.nux.ro/download/nux/dextop/el7/x86_64/
-    enabled = 1
-    gpgcheck = 0
-    ```
-
-- 然后使用下面命令安装xrdp
-    ```
-    # yum -y install xrdp tigervnc-server
-    ```
-
-- 开启并启动xrdp，并检查是否已经启动
-    ```
-    # systemctl enable xrdp.service
-    # systemctl start xrdp.service
-    # systemctl -antup | grep xrdp
-    ```
-
-- 开启xrdp防火墙端口
-    ```
-    # firewall-cmd --permanent --zone=public --add-port=3389/tcp
-    # firewall-cmd --reload
-    ```
