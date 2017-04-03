@@ -166,3 +166,50 @@ Virtual Network Computing（VNC）是一个远程系统，允许你和网络上�
 ```
 下载网址[https://github.com/TigerVNC/tigervnc/releases](https://github.com/TigerVNC/tigervnc/releases)
 
+ubuntu可以使用下面命令进行安装配置：
+```
+$ mkdir vncviewer && cd vncviewer
+$ wget https://dl.bintray.com/tigervnc/stable/tigervnc-1.7.1.x86_64.tar.gz 
+$ tar zxvf tigervnc-1.7.1.x86_64.tar.gz 
+$ sudo cp -r tigervnc-1.7.1.x86_64/usr/* /usr/
+```
+
+
+制作镜像模板
+----
+
+* 创建镜像文件
+
+    ```
+    $ qemu-img create -f qcow2 centos.img 10G
+    ```
+
+* 启动kvm虚拟机，进行系统安装
+
+    ```
+    $ qemu-system-x86_64 -enable-kvm -m 2048 -cdrom CentOS-7-x86_64-DVD.iso -drive file=centos.img,if=virtio  -boot d -usbdevice tablet -nographic -vnc :51
+    ```
+
+* 启动vncviewer链接到kvm虚拟机进行系统安装
+
+    ```
+    $ vncviewer ip:port
+    ```
+    其中，ip是本地的ip地址；port是上面启动kvm命令最后`-vnc`后面指定的端口；
+
+    链接进去后，就按照正常的系统安装完成整个虚拟系统的安装即可；
+
+* 安装完成后再次进入系统
+
+    启动kvm虚拟机命令：
+    ```
+    $ qemu-system-x86_64 -enable-kvm -m 2048 -drive file=centos.img,if=virtio -net nic,model=virtio -net user -boot c -nographic -usbdevice tablet  -vnc :51
+    ```
+    如果在上一步安装完成后，命令行中无法关掉qemu-system-x86_64命令，使用kill杀掉进程就可以了；
+
+    使用vncviewer链接到虚拟机命令：
+    ```
+    $ vncviewer ip:port
+    ```
+    重新链接进去就可以进行登录；
+
