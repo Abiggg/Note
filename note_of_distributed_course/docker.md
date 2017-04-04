@@ -12,7 +12,13 @@ Docker目录
     * 镜像
     * 容器
     * 仓库
-    
+
+* Docker安装
+
+    * Centos安装
+    * Ubuntu安装
+    * 镜像加速器
+
 * Docker基础命令
 
     * 获取镜像
@@ -70,7 +76,78 @@ Docker基本概念
     仓库名很多时候是两段式路径形式,例如: `jwilder/nginx-proxy`;一般前面一个是指Docker Registry的多用户环境下的用户名,
     后面一个是软件的仓库名;
     
-    
+
+Docker安装
+----
+
+* Centos安装
+
+    因为安装Docker需要安装在x64位系统，内核版本不低于3.10，所以centos最低支持centos7；脚本安装命令如下：
+    ```
+    $ curl -sSL https://get.docker.com/ | sh
+    ```
+    因为墙的缘故，国内可以使用阿里云安装脚本：
+    ```
+    $ curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -
+    ```
+
+* Ubuntu安装
+
+    如上面所说，Docker需要安装在x84 64位的内核版本不低于3.10的系统上，所以如果内核版本太低，可以使用下面命令升级：
+
+    ubuntu 12.04 LTS
+    ```
+    $ sudo apt-get install -y --install-recommends linux-generic-lts-trusty
+    ```
+
+    ubuntu 14.04 LTS
+    ```
+    $ sudo apt-get install -y --install-recommends linux-generic-lts-xenial
+    ```
+
+    脚本安装命令如下：
+    ```
+    $ curl -sSL https://get.docker.com/ | sh
+    ```
+    同样，若是被墙，使用阿里云脚本安装：
+    ```
+    $ curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -
+    ```
+
+* 镜像加速器
+
+    为了更快的访问docker hub，可以配置镜像加速器；国内有以下云服务商提供了加速服务：
+
+    - [阿里云加速器](https://account.aliyun.com/)
+    - [DaoCloud加速器](https://www.daocloud.io/mirror#accelerator-doc)
+
+    注册用户并申请加速器，得到类似 `https://jxus37ad.mirror.aliyuncs.com` 的网址；
+
+    **ubuntu14.04配置加速器**
+
+    编辑/etc/default/docker文件，在`DOCKER_OPTS`中添加获得加速器配置`--registry-mirror=<加速器地址>`；如：
+    ```
+    DOCKER_OPTS="--registry-mirror=https://jxus37ad.mirror.aliyuncs.com"
+    ```
+    重启服务
+     ```
+    $ sudo service docker restart
+    ```
+
+    **ubuntu16.04、Centos7配置加速器**
+
+    使用`systemctl enable docker`后，编辑`/etc/systemd/system/multi-user.target.wants/docker.service`文件，
+    找到`ExecStart=`这一行，在后面添加加速器地址`--registry-mirror=<加速器地址>`;如：
+    ```
+    ExecStart=/usr/bin/dockerd --registry-mirror=https://jxus37ad.mirror.aliyuncs.com
+    ```
+    重新加载配置并且重启动
+    ```
+    $ sudo systemctl daemon-reload
+    $ sudo systemctl restart docker
+    ```
+
+
 Docker基础命令
 ----
 
