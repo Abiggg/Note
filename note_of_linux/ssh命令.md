@@ -41,15 +41,6 @@ ssh命令
     Port 8918
     ```
 
-    修改允许root身份登录：
-    ```
-    #PermitRootLogin yes
-    ```
-    去掉前面的注释即可；
-    ```
-    PermitRootLogin yes
-    ```
-
 * Ubuntu安装ssh服务
 
     默认情况下，ubuntu没有安装ssh服务，需要使用手动安装配置；可以使用下面命令进行安装配置:
@@ -64,6 +55,10 @@ ssh命令
     如果还是没有看到上面的输出，那么可以使用命令运行ssh服务：
     ```
     $ sudo /etc/init.d/ssh start
+    ```
+    ubuntu 16.04使用下面命令：
+    ```
+    $ systemctl restart sshd.service
     ```
 
 * 例子
