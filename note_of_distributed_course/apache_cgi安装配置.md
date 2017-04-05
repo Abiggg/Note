@@ -12,6 +12,7 @@ Apache 安装
 
     Arp安装，下载地址[http://www-us.apache.org/dist//apr/apr-1.5.2.tar.gz](http://www-us.apache.org/dist//apr/apr-1.5.2.tar.gz)
     ```
+    $ wget http://www-us.apache.org/dist//apr/apr-1.5.2.tar.gz && tar zxf apr-1.5.2.tar.gz && cd apr-1.5.2
     $ ./configure
     $ make
     $ sudo make install
@@ -19,6 +20,7 @@ Apache 安装
 
     Arp-Util安装，下载地址[http://www-us.apache.org/dist//apr/apr-util-1.5.4.tar.gz](http://www-us.apache.org/dist//apr/apr-util-1.5.4.tar.gz)
     ```
+    $ wget http://www-us.apache.org/dist//apr/apr-util-1.5.4.tar.gz && tar zxf apr-util-1.5.4.tar.gz && cd apr-util-1.5.4
     $ whereis apr
     apr: /usr/local/apr
     $ ./configure --with-apr=/usr/local/apr
@@ -26,8 +28,9 @@ Apache 安装
     $ sudo make install
     ```
 
-    Pcre安装，下载地址[ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz](ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz)
+    Pcre安装，下载地址[http://exim.mirror.fr/pcre/pcre-8.38.tar.gz](http://exim.mirror.fr/pcre/pcre-8.38.tar.gz)
     ```
+    $ wget http://exim.mirror.fr/pcre/pcre-8.38.tar.gz && tar zxf pcre-8.38.tar.gz && cd pcre-8.38
     $ ./configure
     $ make
     $ sudo make install
@@ -39,6 +42,7 @@ Apache 安装
     
     下载解压后，进入解压后的目录，输入下面该命令进行apache的源码编译安装
     ```
+    $ wget http://apache.fayea.com//httpd/httpd-2.4.25.tar.gz && tar zxf httpd-2.4.25.tar.gz && cd httpd-2.4.25
     $ ./configure
     $ make
     $ sudo make install
