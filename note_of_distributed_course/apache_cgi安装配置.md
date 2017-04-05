@@ -188,13 +188,23 @@ CGI介绍及配置
 
 * 通过浏览器访问cgi文件
 
-    在浏览器中输入http://localhost/cgi-bin/hello.py或者http://127.0.0.1/cgi-bin/hello.py，
+    在浏览器中输入http://localhost/cgi-bin/hello.py　或者　http://127.0.0.1/cgi-bin/hello.py　
     看到如下输出：
     ```
     Hello world!
 
     This is my first cgi program
     ```
+    如果是遇到以下错误：
+    ```
+    Forbidden
+    You don't have permission to access /cgi-bin/hello.py
+    ```
+    那么，请确认一下`/home/zhushh/`目录的权限保证为'755'以上；也可以查看ａｐａｃｈｅ的日志；
+    
+    ### ａｐａｃｈｅ的日志在: /usr/local/apache2/logs 目录下 ###
+    其中，错误日志文件为：　`error_log`;访问日志文件为： `access_log`;遇到任何解决不了的问题请查看日志；
+
 * 用C++编写cgi脚本并在浏览器访问，程序如下：
 
     ```c++
