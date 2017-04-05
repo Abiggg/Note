@@ -11,7 +11,7 @@
 
     ```
     $ wget http://ftp.yz.yamagata-u.ac.jp/pub/eclipse/technology/epp/downloads/release/luna/SR2/eclipse-java-luna-SR2-linux-gtk-x86_64.tar.gz
-    $ tar -zxvf eclipse-java-luna-SR1-linux-gtk-x86_64.tar.gz -C /opt
+    $ sudo tar -zxvf eclipse-java-luna-SR1-linux-gtk-x86_64.tar.gz -C /opt/
     ```
 
 * 创建链接目录
