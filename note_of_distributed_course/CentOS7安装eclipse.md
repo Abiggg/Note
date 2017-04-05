@@ -10,7 +10,7 @@
 * 下载eclipse-luna版压缩包并解压
 
     ```
-    $ wget download.php?file=/technology/epp/downloads/release/luna/SR2/eclipse-java-luna-SR2-linux-gtk-x86_64.tar.gz&mirror_id=1248
+    $ wget http://ftp.yz.yamagata-u.ac.jp/pub/eclipse/technology/epp/downloads/release/luna/SR2/eclipse-java-luna-SR2-linux-gtk-x86_64.tar.gz
     $ tar -zxvf eclipse-java-luna-SR1-linux-gtk-x86_64.tar.gz -C /opt
     ```
 
