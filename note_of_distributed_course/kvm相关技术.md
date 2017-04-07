@@ -212,4 +212,39 @@ $ sudo cp -r tigervnc-1.7.1.x86_64/usr/* /usr/
     $ vncviewer ip:port
     ```
     重新链接进去就可以进行登录；
-
+    
+ 
+xrdp安装
+----
+为了使虚拟镜像系统支持远程链接，需要安装xrdp，xrdp是一个开源的远程桌面协议服务器；
+详细链接参考: [xrdp官网](www.xrdp.org)
+ 
+* CentOS虚拟镜像系统安装xrdp
+ 
+    使用下面命令新建xrdp.repo文件
+    ```
+    # vim /etc/yum.repos.d/xrdp.repo
+    ```
+    然后在文件中输入下面内容
+    ```
+    [xrdp]
+    name=xrdp
+    baseurl=http://li.nu.ro/download/nux/dextop/el7/x86_64/
+    enabled=1
+    gpgcheck=0
+    ```
+    配置好后，再使用下面命令安装xrdp:
+    ```
+    # yum -y install xrdp tigervnc-server
+    ```
+    安装完成后，使用下面命令开启xrdp服务，并检查是否启动成功
+    ```
+    # systemctl enable xrdp.service
+    # systemctl start xrdp.service
+    # netstat -antup | grep xrdp
+    ```
+    看到输出success说明安装启动成功，现在来开启xrdp的防火墙端口：
+    ```
+    # firewall-cmd --permanent --zone=public --add-port=3389/tcp
+    # firewall-cmd --reload
+    ```
