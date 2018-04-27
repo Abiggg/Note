@@ -773,3 +773,20 @@ int main(int argc, char const *argv[])
   2   2    a
   3   1    1    2
 ```
+
+### Extern C in C++的作用
+在C++代码中，经常可以看到如下代码：
+```c++
+#ifdef __cplusplus
+extern C {
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+```
+上面这个用法的原因是，为了使C能够调用C++中的函数；为什么C不能直接调用呢？原因还得从编译链接说起，c++使用的编译器是C++编译器，C++中存在
+函数重载，所以c++代码编译的时候，识别一个函数需要根据函数名+参数来区分不同的函数，但是在C语言中，是用函数名就可以进行区分的，这就导致C linker
+链接一个C++库函数时，需要兼容性，所以c++为了使函数能够被C回调使用，就在头文件的地方使用extern C来进行编译，表示支持给C回调使用；
+
+[https://stackoverflow.com/questions/1041866/what-is-the-effect-of-extern-c-in-c](https://stackoverflow.com/questions/1041866/what-is-the-effect-of-extern-c-in-c)
