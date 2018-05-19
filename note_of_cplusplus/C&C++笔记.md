@@ -1,5 +1,31 @@
 ## C/C++
 
+###字节
+使用sizeof计算下面的值，在不同系统的结果：
+（1）32位系统
+```
+sizeof(char) = 1
+sizeof(char *) = 4
+sizeof(short) = 2
+sizeof(int) = 4
+sizeof(long) = 4
+sizeof(long long) = 8
+sizeof(float) = 4
+sizeof(double) = 8
+```
+（2）64位系统
+```
+sizeof(char) = 1
+sizeof(char *) = 8
+sizeof(short) = 2
+sizeof(int) = 4
+sizeof(long) = 8
+sizeof(long long) = 8
+sizeof(float) = 4
+sizeof(double) = 8
+```
+32位和64位主要区别在于地址寻址宽度，32位寻址最大为2^32 = 4G,64位寻址最大为2^64;
+
 类
 ----
 ### Why destructor should be declared as virtual in c++?
