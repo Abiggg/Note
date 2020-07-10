@@ -3,6 +3,13 @@
 ```
 constexpr int maxSize = 10; 
 
+// 循环列表是先进出队列
+// 插入数据时，tail++,表示列尾加1
+// 移出数据时，head++,表头指针前移
+// 当为空时，tail == head;
+// 当为满时, tail + 1 == head;
+// 最多可以存储数据为 maxSize - 1, 这样才能保证满与空有区别
+
 using CircleQueue = struct sCircleQueue {
     int arr[maxSize];
     int tail, head;
